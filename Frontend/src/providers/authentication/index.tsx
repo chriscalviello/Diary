@@ -4,7 +4,7 @@ type Context = {
   currentUser?: CurrentUser;
   error: string;
   loading: boolean;
-  login: React.Dispatch<SignupUser>;
+  login: React.Dispatch<LoginUser>;
   setCurrentUser: (user: CurrentUser) => void;
   setError: (error: string) => void;
   setLoading: (loading: boolean) => void;
@@ -23,7 +23,7 @@ export const AuthenticationProvider = ({ children }: Props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const login = async (newUser: SignupUser) => {
+  const login = async (newUser: LoginUser) => {
     try {
       setLoading(true);
       setError("");
@@ -124,7 +124,14 @@ type CurrentUser = {
   token: string;
 };
 
+export interface LoginUser {
+  username: string;
+  password: string;
+}
+
 export interface SignupUser {
+  name: string;
+  surname: string;
   username: string;
   password: string;
 }
