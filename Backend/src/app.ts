@@ -1,11 +1,12 @@
-import BodyParser from "body-parser";
 import express, { Request, Response, NextFunction } from "express";
 
 import HttpError from "./models/httpError";
 
+import AuthRoutes from "./routes/auth";
 import CommentRoutes from "./routes/comment";
 import UserRoutes from "./routes/user";
 
+import { FakeAuthService } from "./services/auth/fake";
 import { FakeCommentService } from "./services/comment/fake";
 import { FakeUserService } from "./services/user/fake";
 
@@ -37,8 +38,8 @@ class App {
   }
 
   private configureServerAndRoutes = () => {
-    this.app.use(BodyParser.json());
-    this.app.use(BodyParser.urlencoded({ extended: false }));
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
 
     this.app.use((req: Request, res: Response, next: NextFunction) => {
       res.setHeader("Access-Control-Allow-Origin", "*");
@@ -51,6 +52,10 @@ class App {
       next();
     });
 
+    this.app.use(
+      "/api/auth",
+      new AuthRoutes(new FakeAuthService()).getRouter()
+    );
     this.app.use(
       "/api/users",
       new UserRoutes(new FakeUserService()).getRouter()
