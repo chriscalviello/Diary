@@ -37,15 +37,15 @@ export const AuthenticationProvider = ({ children }: Props) => {
       });
       const responseData = await response.json();
 
+      if (!response.ok) {
+        throw new Error(responseData.message);
+      }
       const user: CurrentUser = {
         username: newUser.username,
         token: responseData.token,
       };
       setCurrentUser(user);
       localStorage.setItem("currentUser", JSON.stringify(user));
-      if (!response.ok) {
-        throw new Error(responseData.message);
-      }
     } catch (err) {
       setError(err.message);
     }
@@ -65,6 +65,9 @@ export const AuthenticationProvider = ({ children }: Props) => {
         body: JSON.stringify({ ...newUser }),
       });
       const responseData = await response.json();
+      if (!response.ok) {
+        throw new Error(responseData.message);
+      }
 
       const user: CurrentUser = {
         username: newUser.username,
@@ -72,9 +75,6 @@ export const AuthenticationProvider = ({ children }: Props) => {
       };
       setCurrentUser(user);
       localStorage.setItem("currentUser", JSON.stringify(user));
-      if (!response.ok) {
-        throw new Error(responseData.message);
-      }
     } catch (err) {
       setError(err.message);
     }
