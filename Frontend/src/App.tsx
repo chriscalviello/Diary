@@ -4,6 +4,7 @@ import {
   AuthenticationProvider,
   useAuthentication,
 } from "./providers/authentication";
+import HomeContainer from "./pages/home/container";
 import LoginContainer from "./pages/authentication/login/container";
 import SignupContainer from "./pages/authentication/signup/container";
 import ProtectedRoute from "./protectedRoute";
@@ -18,9 +19,11 @@ import Menu, { ItemProps as MenuItemProps } from "./pages/menu";
 
 const App: React.FC = () => {
   return (
-    <AuthenticationProvider>
-      <Contents />
-    </AuthenticationProvider>
+    <Router>
+      <AuthenticationProvider>
+        <Contents />
+      </AuthenticationProvider>
+    </Router>
   );
 };
 
@@ -59,22 +62,20 @@ const Contents: React.FC = () => {
         </Toolbar>
       </AppBar>
       <Content>
-        <Router>
-          <Left>
-            <Menu items={menuItems} />
-          </Left>
-          <Right>
-            <Switch>
-              <Route path="/signup">
-                <SignupContainer />
-              </Route>
-              <Route path="/login">
-                <LoginContainer />
-              </Route>
-              <ProtectedRoute path="/" component={<h1>Home</h1>} />
-            </Switch>
-          </Right>
-        </Router>
+        <Left>
+          <Menu items={menuItems} />
+        </Left>
+        <Right>
+          <Switch>
+            <Route path="/signup">
+              <SignupContainer />
+            </Route>
+            <Route path="/login">
+              <LoginContainer />
+            </Route>
+            <ProtectedRoute path="/" component={HomeContainer} />
+          </Switch>
+        </Right>
       </Content>
     </Container>
   );

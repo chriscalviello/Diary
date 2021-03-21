@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { useHistory } from "react-router-dom";
 
 type Context = {
   currentUser?: CurrentUser;
@@ -22,6 +23,7 @@ export const AuthenticationProvider = ({ children }: Props) => {
   );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const history = useHistory();
 
   const login = async (newUser: LoginUser) => {
     try {
@@ -46,6 +48,7 @@ export const AuthenticationProvider = ({ children }: Props) => {
       };
       setCurrentUser(user);
       localStorage.setItem("currentUser", JSON.stringify(user));
+      history.replace("/");
     } catch (err) {
       setError(err.message);
     }
@@ -75,6 +78,7 @@ export const AuthenticationProvider = ({ children }: Props) => {
       };
       setCurrentUser(user);
       localStorage.setItem("currentUser", JSON.stringify(user));
+      history.replace("/");
     } catch (err) {
       setError(err.message);
     }
