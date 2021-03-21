@@ -3,7 +3,7 @@ import { User } from "../../models/user";
 
 export class FakeUserService implements UserService {
   delete = () => {};
-  save = () => new User("1", "1");
+  save = () => new User("1", "1", "1", "1", "1");
   getAll = () => [];
-  getById = (id: string) => new User("1", "1");
+  getById = (id: string) => new User("1", "1", "1", "1", "1");
 }

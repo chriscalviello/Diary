@@ -40,6 +40,8 @@ class UserController {
   signup = async (req: Request, res: Response, next: NextFunction) => {
     const username = req.body.username;
     const password = req.body.password;
+    const name = req.body.name;
+    const surname = req.body.surname;
 
     if (!username) {
       return next(new HttpError("A 'username' param is required", 500));
@@ -49,8 +51,16 @@ class UserController {
       return next(new HttpError("A 'password' param is required", 500));
     }
 
+    if (!name) {
+      return next(new HttpError("A 'name' param is required", 500));
+    }
+
+    if (!surname) {
+      return next(new HttpError("A 'surname' param is required", 500));
+    }
+
     try {
-      const token = this.authService.signup(username, password);
+      const token = this.authService.signup(username, password, name, surname);
       res.json({ token });
     } catch (err) {
       return next(new HttpError(err, 500));
