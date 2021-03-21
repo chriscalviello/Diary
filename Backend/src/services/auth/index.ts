@@ -2,8 +2,13 @@ import { User } from "../../models/user";
 
 interface IAuthService {
   delete: () => void;
-  login: (username: string, password: string) => string;
-  signup: (username: string, password: string) => string;
+  login: (email: string, password: string) => string;
+  signup: (
+    email: string,
+    password: string,
+    name: string,
+    surname: string
+  ) => string;
   get: () => User[];
 }
 

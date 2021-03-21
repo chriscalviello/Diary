@@ -6,35 +6,35 @@ import Form from "../../../components/form";
 interface Props {
   error: string;
   loading: boolean;
-  onActionRequest: React.Dispatch<{ username: string; password: string }>;
+  onActionRequest: React.Dispatch<{ email: string; password: string }>;
   title: string;
 }
 
 const Login: React.FC<Props> = ({ error, loading, onActionRequest, title }) => {
-  const [username, setUsername] = useState<string>("");
-  const [usernameError, setUsernameError] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
 
   const handleSaveRequest = () => {
-    setUsernameError("");
+    setEmailError("");
     setPasswordError("");
 
-    if (!username) {
-      setUsernameError("Username is required");
+    if (!email) {
+      setEmailError("Email is required");
     }
     if (!password) {
       setPasswordError("Password is required");
     }
 
-    if (username && password) {
-      onActionRequest({ username, password });
+    if (email && password) {
+      onActionRequest({ email, password });
     }
   };
 
-  const handleUsernameChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsernameError("");
-    setUsername(e.target.value);
+  const handleEmailChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmailError("");
+    setEmail(e.target.value);
   };
 
   const handlePasswordChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,11 +56,11 @@ const Login: React.FC<Props> = ({ error, loading, onActionRequest, title }) => {
         ]}
         inputs={[
           {
-            error: usernameError,
-            label: "Username",
-            onChange: handleUsernameChanged,
+            error: emailError,
+            label: "Email",
+            onChange: handleEmailChanged,
             type: "TEXT",
-            value: username,
+            value: email,
           },
           {
             error: passwordError,

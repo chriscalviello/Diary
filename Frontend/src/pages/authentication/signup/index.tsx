@@ -9,7 +9,7 @@ interface Props {
   onActionRequest: React.Dispatch<{
     name: string;
     surname: string;
-    username: string;
+    email: string;
     password: string;
   }>;
   title: string;
@@ -25,15 +25,15 @@ const Signup: React.FC<Props> = ({
   const [nameError, setNameError] = useState<string>("");
   const [surname, setSurname] = useState<string>("");
   const [surnameError, setSurnameError] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
-  const [usernameError, setUsernameError] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
 
   const handleSaveRequest = () => {
     setNameError("");
     setSurnameError("");
-    setUsernameError("");
+    setEmailError("");
     setPasswordError("");
 
     if (!name) {
@@ -42,15 +42,15 @@ const Signup: React.FC<Props> = ({
     if (!surname) {
       setSurnameError("Surname is required");
     }
-    if (!username) {
-      setUsernameError("Username is required");
+    if (!email) {
+      setEmailError("Email is required");
     }
     if (!password) {
       setPasswordError("Password is required");
     }
 
-    if (name && surname && username && password) {
-      onActionRequest({ name, surname, username, password });
+    if (name && surname && email && password) {
+      onActionRequest({ name, surname, email, password });
     }
   };
 
@@ -64,9 +64,9 @@ const Signup: React.FC<Props> = ({
     setSurname(e.target.value);
   };
 
-  const handleUsernameChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsernameError("");
-    setUsername(e.target.value);
+  const handleEmailChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmailError("");
+    setEmail(e.target.value);
   };
 
   const handlePasswordChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,11 +102,11 @@ const Signup: React.FC<Props> = ({
             value: surname,
           },
           {
-            error: usernameError,
-            label: "Username",
-            onChange: handleUsernameChanged,
+            error: emailError,
+            label: "Email",
+            onChange: handleEmailChanged,
             type: "TEXT",
-            value: username,
+            value: email,
           },
           {
             error: passwordError,
