@@ -33,7 +33,7 @@ export class FakeAuthService implements AuthService {
 
     fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
 
-    return "fake-jwt-token-" + email;
+    return "fake-jwt-token-" + newUser.id;
   };
   get = () => [];
 }
