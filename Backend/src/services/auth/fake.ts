@@ -11,15 +11,16 @@ export class FakeAuthService implements AuthService {
     const data = fs.readFileSync(pathToDb, "utf8");
     const users = JSON.parse(data);
 
-    if (
-      !users.find((u: User) => u.email === email && u.password === password)
-    ) {
+    const user = users.find(
+      (u: User) => u.email === email && u.password === password
+    );
+    if (!user) {
       throw "Email or password is incorrect";
     }
 
-    return "fake-jwt-token-" + email;
+    return "fake-jwt-token-" + user.id;
   };
-  signup = (email: string, password: string) => {
+  signup = (email: string, password: string, name: string, surname: string) => {
     const data = fs.readFileSync(pathToDb, "utf8");
     const users = JSON.parse(data);
 
@@ -27,7 +28,8 @@ export class FakeAuthService implements AuthService {
       throw "The provided email is already in use";
     }
 
-    users.push({ email, password });
+    const newUser = new User(email, password, name, surname, users.length + 1);
+    users.push({ ...newUser });
 
     fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
 
