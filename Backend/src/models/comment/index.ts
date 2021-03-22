@@ -1,11 +1,11 @@
 export class Comment {
   id: string;
   title: string;
-  text: string;
+  body: string;
 
-  constructor(id: string, title: string, text: string) {
+  constructor(id: string, title: string, body: string) {
     this.id = id;
     this.title = title;
-    this.text = text;
+    this.body = body;
   }
 }
