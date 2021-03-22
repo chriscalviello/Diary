@@ -17,9 +17,9 @@ interface Props {
 }
 
 export const AuthenticationProvider = ({ children }: Props) => {
-  const x = localStorage.getItem("currentUser");
+  const localStorageCurrentUser = localStorage.getItem("currentUser");
   const [currentUser, setCurrentUser] = useState<CurrentUser | undefined>(
-    x !== null && JSON.parse(x)
+    localStorageCurrentUser !== null && JSON.parse(localStorageCurrentUser)
   );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
