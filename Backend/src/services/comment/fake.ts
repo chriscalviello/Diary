@@ -7,7 +7,23 @@ import { Comment } from "../../models/comment";
 import { User } from "../../models/user";
 
 export class FakeCommentService implements CommentService {
-  delete = () => {};
+  delete = (userId: string, id: string) => {
+    const data = fs.readFileSync(pathToDb, "utf8");
+    const users = JSON.parse(data);
+
+    const user: User = users.find((u: User) => u.id === userId);
+    if (!user) {
+      throw "The provided user doesn't exist";
+    }
+
+    const commentIndex = user.comments.findIndex((c) => c.id === id);
+    if (commentIndex === -1) {
+      throw "The privded comment doesn't exist";
+    }
+    user.comments.splice(commentIndex, 1);
+
+    fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
+  };
   save = (userId: string, title: string, body: string, id: string | null) => {
     const data = fs.readFileSync(pathToDb, "utf8");
     const users = JSON.parse(data);

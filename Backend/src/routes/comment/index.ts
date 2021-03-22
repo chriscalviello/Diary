@@ -11,7 +11,7 @@ class CommentRoutes {
 
     const controller = new CommentController(commentService, userService);
 
-    this.router.get("/delete", controller.delete);
+    this.router.post("/delete", controller.delete);
     this.router.post("/get", controller.get);
     this.router.post("/save", controller.save);
   }

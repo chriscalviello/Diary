@@ -1,7 +1,7 @@
 import { Comment } from "../../models/comment";
 
 interface ICommentService {
-  delete: () => void;
+  delete: (userId: string, id: string) => void;
   save: (
     userId: string,
     title: string,

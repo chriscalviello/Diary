@@ -13,7 +13,25 @@ class CommentController {
   }
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
-    return this.commentService.delete();
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+      res.sendStatus(403);
+      return;
+    }
+
+    const userId = token.split("-")[3];
+
+    const commentId = req.body.id;
+
+    try {
+      this.commentService.delete(userId, commentId);
+
+      res.json();
+    } catch (err) {
+      return next(new HttpError(err, 500));
+    }
   };
 
   get = async (req: Request, res: Response, next: NextFunction) => {
