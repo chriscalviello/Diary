@@ -47,7 +47,44 @@ const CommentsContainer: React.FC = ({}) => {
     fetchComments();
   }, []);
 
-  return <Home comments={comments} error={error} loading={loading} />;
+  const deleteComment = async (id: string) => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await fetch(
+        "http://localhost:5000/api/comments/delete",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + currentUser?.token,
+          },
+          body: JSON.stringify({
+            id,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong");
+      }
+
+      fetchComments();
+    } catch (err) {
+      setLoading(false);
+      setError(err.message);
+    }
+  };
+
+  return (
+    <Home
+      comments={comments}
+      error={error}
+      loading={loading}
+      onDeleteRequest={deleteComment}
+    />
+  );
 };
 
 export default CommentsContainer;

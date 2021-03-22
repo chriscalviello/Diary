@@ -11,6 +11,7 @@ interface Props {
   comments: CommentProps[];
   error: string;
   loading: boolean;
+  onDeleteRequest: (id: string) => void;
 }
 
 export interface CommentProps {
@@ -20,7 +21,12 @@ export interface CommentProps {
   date: string;
 }
 
-const Home: React.FC<Props> = ({ comments, error, loading }) => {
+const Home: React.FC<Props> = ({
+  comments,
+  error,
+  loading,
+  onDeleteRequest,
+}) => {
   const history = useHistory();
   const handleAddIconClick = () => {
     history.push("/addComment");
@@ -46,7 +52,7 @@ const Home: React.FC<Props> = ({ comments, error, loading }) => {
         };
         const deleteCta: ItemCtaProps = {
           icon: <DeleteIcon />,
-          onClick: () => alert("User wants to delete"),
+          onClick: () => onDeleteRequest(c.id),
         };
         return (
           <Comment
