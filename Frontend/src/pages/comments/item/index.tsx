@@ -10,6 +10,7 @@ interface Props {
   body: string;
   ctas?: CtaProps[];
   title: string;
+  date: string;
 }
 
 export interface CtaProps {
@@ -17,10 +18,10 @@ export interface CtaProps {
   onClick: MouseEventHandler<HTMLButtonElement>;
 }
 
-const Item: React.FC<Props> = ({ ctas, body, title, ...rest }) => {
+const Item: React.FC<Props> = ({ ctas, body, date, title, ...rest }) => {
   return (
     <Card style={{ textAlign: "left" }} {...rest}>
-      <CardHeader title={title} subheader="September 14, 2016" />
+      <CardHeader title={title} subheader={date} />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           {body}

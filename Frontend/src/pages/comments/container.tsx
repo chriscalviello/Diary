@@ -32,6 +32,7 @@ const CommentsContainer: React.FC = ({}) => {
             id: c.id,
             body: c.body,
             title: c.title,
+            date: new Date(c.created_at).toLocaleString(),
           };
           return comment;
         })

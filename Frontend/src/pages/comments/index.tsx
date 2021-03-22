@@ -16,6 +16,7 @@ export interface CommentProps {
   id: string;
   title: string;
   body: string;
+  date: string;
 }
 
 const Home: React.FC<Props> = ({ comments, error, loading }) => {
@@ -45,6 +46,7 @@ const Home: React.FC<Props> = ({ comments, error, loading }) => {
             ctas={[editCta, deleteCta]}
             title={c.title}
             body={c.body}
+            date={c.date}
           />
         );
       })}
