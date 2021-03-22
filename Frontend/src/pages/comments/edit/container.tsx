@@ -99,12 +99,17 @@ const EditCommentContainer: React.FC = ({}) => {
     }
   };
 
+  const goToList = () => {
+    history.push("/comments");
+  };
+
   return (
     <Edit
       comment={comment}
       error={error}
       loading={loading}
       onActionRequest={saveComment}
+      onCancelRequest={goToList}
     />
   );
 };

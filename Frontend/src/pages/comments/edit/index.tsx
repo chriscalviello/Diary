@@ -11,6 +11,7 @@ interface Props {
     title: string;
     body: string;
   }>;
+  onCancelRequest: React.DispatchWithoutAction;
   loading: boolean;
 }
 
@@ -25,6 +26,7 @@ const AddComment: React.FC<Props> = ({
   error,
   loading,
   onActionRequest,
+  onCancelRequest,
 }) => {
   const [title, setTitle] = useState<string>("");
   const [titleError, setTitleError] = useState<string>("");
@@ -70,7 +72,7 @@ const AddComment: React.FC<Props> = ({
             },
             {
               label: "Cancel",
-              onClick: handleSaveRequest,
+              onClick: onCancelRequest,
             },
           ]}
           inputs={[
