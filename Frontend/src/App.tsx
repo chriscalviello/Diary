@@ -10,13 +10,12 @@ import LoginContainer from "./pages/authentication/login/container";
 import SignupContainer from "./pages/authentication/signup/container";
 import ProtectedRoute from "./protectedRoute";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import PeopleIcon from "@material-ui/icons/People";
 import MessageIcon from "@material-ui/icons/Message";
 import Menu, { ItemProps as MenuItemProps } from "./pages/menu";
+import Topbar from "./components/topbar";
 
 const App: React.FC = () => {
   return (
@@ -57,11 +56,7 @@ const Contents: React.FC = () => {
       ];
   return (
     <Container>
-      <AppBar position="static">
-        <Toolbar>
-          <h3>My Diary</h3>
-        </Toolbar>
-      </AppBar>
+      <StyledTopbar title="My Diary" />
       <Content>
         <Left>
           <Menu items={menuItems} />
@@ -97,9 +92,16 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
+const StyledTopbar = styled(Topbar)`
+  display: flex;
+  flex: 0;
+  height: 10vh;
+`;
+
 const Content = styled.div`
   display: flex;
-  flex: 1;
+  flex: 0;
+  height: 90vh;
 `;
 
 const Left = styled.div`
@@ -112,7 +114,9 @@ const Left = styled.div`
 const Right = styled.div`
   display: flex;
   flex: 1;
-  padding: 2.5rem;
+  padding: 0rem 2.5rem;
+  margin: 1rem 0;
+  overflow: auto;
 `;
 
 export default App;

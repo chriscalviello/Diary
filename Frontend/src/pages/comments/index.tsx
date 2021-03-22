@@ -2,6 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Item, { CtaProps as ItemCtaProps } from "./item";
+import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -27,7 +28,14 @@ const Home: React.FC<Props> = ({ comments, error, loading }) => {
   return (
     <Container>
       <h1>Comments</h1>
-      <AddIcon onClick={() => handleAddIconClick()} />
+      <Button
+        variant="contained"
+        color="primary"
+        startIcon={<AddIcon />}
+        onClick={() => handleAddIconClick()}
+      >
+        New Comment
+      </Button>
       <h1>{error}</h1>
       {loading && <h4>loading</h4>}
       {!comments.length && <b>There are no comments to show</b>}
@@ -58,9 +66,6 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-content: space-between;
-  text-align: center;
 `;
 
 const Comment = styled(Item)`
