@@ -62,7 +62,10 @@ class App {
     );
     this.app.use(
       "/api/comments",
-      new CommentRoutes(new FakeCommentService()).getRouter()
+      new CommentRoutes(
+        new FakeCommentService(),
+        new FakeUserService()
+      ).getRouter()
     );
 
     this.app.use((req: Request, res: Response, next: NextFunction) => {
