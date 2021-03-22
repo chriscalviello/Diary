@@ -17,8 +17,7 @@ class CommentController {
     const token = authHeader && authHeader.split(" ")[1];
 
     if (!token) {
-      res.sendStatus(403);
-      return;
+      return next(new HttpError("You are not allowed to delete comments", 403));
     }
 
     const userId = token.split("-")[3];
@@ -39,8 +38,7 @@ class CommentController {
     const token = authHeader && authHeader.split(" ")[1];
 
     if (!token) {
-      res.sendStatus(403);
-      return;
+      return next(new HttpError("You are not allowed to read comments", 403));
     }
 
     const userId = token.split("-")[3];
@@ -69,8 +67,7 @@ class CommentController {
     const token = authHeader && authHeader.split(" ")[1];
 
     if (!token) {
-      res.sendStatus(403);
-      return;
+      return next(new HttpError("You are not allowed to edit comments", 403));
     }
 
     const userId = token.split("-")[3];
