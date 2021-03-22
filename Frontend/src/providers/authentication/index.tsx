@@ -6,6 +6,7 @@ type Context = {
   error: string;
   loading: boolean;
   login: React.Dispatch<LoginUser>;
+  logout: React.DispatchWithoutAction;
   setCurrentUser: (user: CurrentUser) => void;
   setError: (error: string) => void;
   setLoading: (loading: boolean) => void;
@@ -55,6 +56,12 @@ export const AuthenticationProvider = ({ children }: Props) => {
     setLoading(false);
   };
 
+  const logout = () => {
+    localStorage.removeItem("currentUser");
+    setCurrentUser(undefined);
+    history.push("/login");
+  };
+
   const signup = async (newUser: SignupUser) => {
     try {
       setLoading(true);
@@ -94,6 +101,7 @@ export const AuthenticationProvider = ({ children }: Props) => {
       setLoading,
       setError,
       login,
+      logout,
       signup,
     }),
     [
@@ -104,6 +112,7 @@ export const AuthenticationProvider = ({ children }: Props) => {
       setLoading,
       setError,
       login,
+      logout,
       signup,
     ]
   );
