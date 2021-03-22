@@ -5,6 +5,7 @@ import {
   useAuthentication,
 } from "./providers/authentication";
 import CommentsContainer from "./pages/comments/container";
+import EditCommentContainer from "./pages/comments/edit/container";
 import LoginContainer from "./pages/authentication/login/container";
 import SignupContainer from "./pages/authentication/signup/container";
 import ProtectedRoute from "./protectedRoute";
@@ -73,6 +74,14 @@ const Contents: React.FC = () => {
             <Route path="/login">
               <LoginContainer />
             </Route>
+            <ProtectedRoute
+              path="/comments/:id"
+              component={EditCommentContainer}
+            />
+            <ProtectedRoute
+              path="/addComment"
+              component={EditCommentContainer}
+            />
             <ProtectedRoute path="/comments" component={CommentsContainer} />
           </Switch>
         </Right>

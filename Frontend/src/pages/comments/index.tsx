@@ -1,6 +1,8 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Item, { CtaProps as ItemCtaProps } from "./item";
+import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
@@ -11,21 +13,27 @@ interface Props {
 }
 
 export interface CommentProps {
+  id: string;
   title: string;
   body: string;
 }
 
 const Home: React.FC<Props> = ({ comments, error, loading }) => {
+  const history = useHistory();
+  const handleAddIconClick = () => {
+    history.push("/addComment");
+  };
   return (
     <Container>
       <h1>Comments</h1>
+      <AddIcon onClick={() => handleAddIconClick()} />
       <h1>{error}</h1>
       {loading && <h4>loading</h4>}
       {!comments.length && <b>There are no comments to show</b>}
       {comments.map((c, i) => {
         const editCta: ItemCtaProps = {
           icon: <EditIcon />,
-          onClick: () => alert("User wants to edit"),
+          onClick: () => history.push("/comments/" + c.id),
         };
         const deleteCta: ItemCtaProps = {
           icon: <DeleteIcon />,

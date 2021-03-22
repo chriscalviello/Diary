@@ -19,8 +19,10 @@ const Form: React.FC<Props> = ({ ctas, inputs }) => {
           helperText={input.error}
           label={input.label}
           margin="dense"
+          multiline={input.type === "TEXTAREA"}
           onChange={input.onChange}
-          type={input.type === "TEXT" ? "text" : "password"}
+          type={input.type === "PASSWORD" ? "password" : "text"}
+          rows={input.type === "TEXTAREA" ? input.rows : undefined}
           placeholder={input.placeholder}
           value={input.value}
         />
@@ -73,7 +75,12 @@ interface InputPasswordProps extends InputProps {
   type: "PASSWORD";
 }
 
-type InputType = InputTextProps | InputPasswordProps;
+interface TextareaProps extends InputProps {
+  type: "TEXTAREA";
+  rows: number;
+}
+
+type InputType = InputTextProps | InputPasswordProps | TextareaProps;
 
 interface CtaProps {
   primary?: boolean;

@@ -21,6 +21,7 @@ const CommentsContainer: React.FC = ({}) => {
         },
       });
       const responseData = await response.json();
+
       if (!response.ok) {
         throw new Error(responseData.message);
       }
@@ -28,6 +29,7 @@ const CommentsContainer: React.FC = ({}) => {
       setComments(
         responseData.comments.map((c: any) => {
           const comment: CommentProps = {
+            id: c.id,
             body: c.body,
             title: c.title,
           };
