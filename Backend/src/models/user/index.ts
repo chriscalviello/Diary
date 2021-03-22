@@ -1,9 +1,12 @@
+import { Comment } from "../comment";
+
 export class User {
   id: string;
   email: string;
   name: string;
   password: string;
   surname: string;
+  comments: Comment[];
 
   constructor(
     email: string,
@@ -17,5 +20,6 @@ export class User {
     this.password = password;
     this.surname = surname;
     this.id = id;
+    this.comments = [];
   }
 }

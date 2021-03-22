@@ -5,6 +5,12 @@
     "password": "admin",
     "name": "admin",
     "surname": "admin",
-    "comments": []
+    "comments": [
+      {
+        "id": "1",
+        "body": "This is a simple comment",
+        "title": "Simple comment"
+      }
+    ]
   }
 ]
