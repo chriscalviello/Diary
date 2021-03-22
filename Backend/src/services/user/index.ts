@@ -1,7 +1,7 @@
 import { User } from "../../models/user";
 
 interface IUserService {
-  delete: () => void;
+  delete: (currentUserId: string, id: string) => void;
   save: () => User;
   getAll: () => User[];
   getById: (userId: string) => User;

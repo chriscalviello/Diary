@@ -10,7 +10,24 @@ class UserController {
   }
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
-    return this.userService.delete();
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+      return next(new HttpError("You are not allowed to delete comments", 403));
+    }
+
+    const currentUserId = token.split("-")[3];
+
+    const userId = req.body.id;
+
+    try {
+      this.userService.delete(currentUserId, userId);
+
+      res.json();
+    } catch (err) {
+      return next(new HttpError(err, 500));
+    }
   };
 
   get = async (req: Request, res: Response, next: NextFunction) => {
@@ -18,23 +35,27 @@ class UserController {
     const token = authHeader && authHeader.split(" ")[1];
 
     if (!token) {
-      res.sendStatus(403);
-      return;
+      return next(new HttpError("You are not allowed to read users", 403));
     }
 
     const userId = token.split("-")[3];
 
     try {
       const user = this.userService.getById(userId);
+      if (!user) {
+        return next(new HttpError("You are not allowed to read users", 403));
+      }
 
-      res.json({ user });
+      const users = this.userService.getAll();
+      console.log("USERS", users);
+      res.json({ users });
     } catch (err) {
       return next(new HttpError(err, 500));
     }
   };
 
   save = async (req: Request, res: Response, next: NextFunction) => {
-    return this.userService.save();
+    return this.userService.save("", "", "", "", "");
   };
 }
 
