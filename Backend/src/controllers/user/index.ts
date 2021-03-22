@@ -38,24 +38,75 @@ class UserController {
       return next(new HttpError("You are not allowed to read users", 403));
     }
 
-    const userId = token.split("-")[3];
+    const currentUserId = token.split("-")[3];
+    const userId = req.query.id as string;
 
     try {
-      const user = this.userService.getById(userId);
-      if (!user) {
+      const currentUser = this.userService.getById(currentUserId);
+      if (!currentUser) {
         return next(new HttpError("You are not allowed to read users", 403));
       }
 
-      const users = this.userService.getAll();
-      console.log("USERS", users);
-      res.json({ users });
+      if (userId) {
+        const user = this.userService.getById(userId);
+        if (!user) {
+          return next(new HttpError("User does not exist", 500));
+        }
+        res.json({ users: [user] });
+      } else {
+        const users = this.userService.getAll();
+        res.json({ users });
+      }
     } catch (err) {
       return next(new HttpError(err, 500));
     }
   };
 
   save = async (req: Request, res: Response, next: NextFunction) => {
-    return this.userService.save("", "", "", "", "");
+    const email = req.body.email;
+    const name = req.body.name;
+    const surname = req.body.surname;
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+      return next(new HttpError("You are not allowed to edit comments", 403));
+    }
+
+    const currentUserId = token.split("-")[3];
+
+    if (!email) {
+      return next(new HttpError("A 'email' param is required", 500));
+    }
+
+    if (!name) {
+      return next(new HttpError("A 'name' param is required", 500));
+    }
+
+    if (!surname) {
+      return next(new HttpError("A 'surname' param is required", 500));
+    }
+
+    const userId = req.body.id as string;
+
+    try {
+      if (userId) {
+        const user = this.userService.edit(email, name, surname, userId);
+
+        res.json({ user });
+      } else {
+        const password = req.body.password;
+        if (!password) {
+          return next(new HttpError("A 'password' param is required", 500));
+        }
+
+        const user = this.userService.create(email, password, name, surname);
+
+        res.json({ user });
+      }
+    } catch (err) {
+      return next(new HttpError(err, 500));
+    }
   };
 }
 

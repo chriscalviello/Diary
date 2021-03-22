@@ -23,7 +23,33 @@ export class FakeUserService implements UserService {
 
     fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
   };
-  save = () => new User("1", "1", "1", "1", "1");
+  create = (email: string, password: string, name: string, surname: string) => {
+    const data = fs.readFileSync(pathToDb, "utf8");
+    const users = JSON.parse(data);
+
+    const newUser = new User(email, password, name, surname, users.length + 1);
+    users.push({ ...newUser });
+
+    fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
+
+    return newUser;
+  };
+  edit = (email: string, name: string, surname: string, id: string) => {
+    const data = fs.readFileSync(pathToDb, "utf8");
+    const users = JSON.parse(data);
+
+    const user = users.find((u: User) => u.id === id);
+    if (!user) {
+      throw "The provided user doesn't exist";
+    }
+    user.email = email;
+    user.name = name;
+    user.surname = surname;
+
+    fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
+
+    return user;
+  };
   getAll = () => {
     const data = fs.readFileSync(pathToDb, "utf8");
     const users = JSON.parse(data);
