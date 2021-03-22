@@ -10,9 +10,9 @@ class UserRoutes {
 
     const controller = new UserController(userService);
 
-    this.router.get("/delete", controller.delete);
-    this.router.post("/get", controller.get);
-    this.router.get("/save", controller.save);
+    this.router.post("/delete", controller.delete);
+    this.router.get("/get", controller.get);
+    this.router.post("/save", controller.save);
   }
 
   getRouter = () => this.router;
