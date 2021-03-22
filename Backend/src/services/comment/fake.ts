@@ -66,7 +66,7 @@ export class FakeCommentService implements CommentService {
       throw "The provided user doesn't exist";
     }
 
-    return user.comments;
+    return user.comments.sort((a, b) => (a.created_at > b.created_at ? -1 : 1));
   };
   getByUser = (id: string) => [];
 }
