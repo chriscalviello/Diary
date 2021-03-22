@@ -4,7 +4,7 @@ import {
   AuthenticationProvider,
   useAuthentication,
 } from "./providers/authentication";
-import HomeContainer from "./pages/home/container";
+import CommentsContainer from "./pages/comments/container";
 import LoginContainer from "./pages/authentication/login/container";
 import SignupContainer from "./pages/authentication/signup/container";
 import ProtectedRoute from "./protectedRoute";
@@ -73,7 +73,7 @@ const Contents: React.FC = () => {
             <Route path="/login">
               <LoginContainer />
             </Route>
-            <ProtectedRoute path="/" component={HomeContainer} />
+            <ProtectedRoute path="/comments" component={CommentsContainer} />
           </Switch>
         </Right>
       </Content>
