@@ -34,14 +34,7 @@ export class FakeUserService implements UserService {
     const data = fs.readFileSync(pathToDb, "utf8");
     const users = JSON.parse(data);
 
-    const newUser = new User(
-      email,
-      password,
-      name,
-      surname,
-      role,
-      (users.length + 1).toString()
-    );
+    const newUser = new User(email, password, name, surname, role);
     users.push({ ...newUser });
 
     fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
