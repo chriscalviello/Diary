@@ -8,7 +8,8 @@ interface ICommentService {
     text: string,
     id: string | null
   ) => Comment;
-  getAll: (userId: string) => Comment[];
+  getAll: () => Comment[];
+  getById: (id: string) => Comment | undefined;
   getByUser: (userId: string) => Comment[];
 }
 

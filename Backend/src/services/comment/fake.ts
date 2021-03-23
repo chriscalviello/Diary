@@ -57,16 +57,30 @@ export class FakeCommentService implements CommentService {
       return comment;
     }
   };
-  getAll = (userId: string) => {
+  getAll = () => {
     const data = fs.readFileSync(pathToDb, "utf8");
     const users = JSON.parse(data);
 
-    const user: User = users.find((u: User) => u.id === userId);
+    const comments: Comment[] = users.map((u: User) => u.comments);
+
+    return comments
+      .flat()
+      .sort((a, b) => (a.created_at > b.created_at ? -1 : 1));
+  };
+  getById = (id: string) => {
+    const comments = this.getAll();
+
+    return comments.find((c: Comment) => c.id === id);
+  };
+  getByUser = (id: string) => {
+    const data = fs.readFileSync(pathToDb, "utf8");
+    const users = JSON.parse(data);
+
+    const user: User = users.find((u: User) => u.id === id);
     if (!user) {
       throw "The provided user doesn't exist";
     }
 
     return user.comments.sort((a, b) => (a.created_at > b.created_at ? -1 : 1));
   };
-  getByUser = (id: string) => [];
 }

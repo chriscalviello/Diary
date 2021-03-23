@@ -23,6 +23,11 @@ class CommentRoutes {
       controller.get
     );
     this.router.post(
+      "/getById",
+      AllowRouteTo([Roles.user, Roles.admin]),
+      controller.getById
+    );
+    this.router.post(
       "/save",
       AllowRouteTo([Roles.user, Roles.admin]),
       controller.save

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import HttpError from "../../models/httpError";
 import CommentService from "../../services/comment";
 import UserService from "../../services/user";
+import { Roles } from "../../authorization";
 
 class CommentController {
   private commentService: CommentService;
@@ -33,26 +34,36 @@ class CommentController {
     }
   };
 
-  get = async (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-
-    if (!token) {
-      return next(new HttpError("You are not allowed to read comments", 403));
-    }
-
-    const userId = token.split("-")[3];
-
+  getById = async (req: Request, res: Response, next: NextFunction) => {
     const commentId = req.body.id;
 
+    if (!commentId) {
+      return next(new HttpError("A 'id' param is required", 500));
+    }
+
     try {
-      if (commentId) {
-        const user = this.userService.getById(userId);
-        const comments = user.comments.filter((c) => c.id === commentId);
+      const comment = this.commentService.getById(commentId);
+      if (comment && req.user.role === Roles.user) {
+        const userComment = req.user.comments.find((c) => c.id === comment.id);
+        if (!userComment) {
+          return next(new HttpError("Forbidden", 403));
+        }
+      }
+
+      res.json({ comment: comment });
+    } catch (err) {
+      return next(new HttpError(err, 500));
+    }
+  };
+
+  get = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (req.user.role === Roles.admin) {
+        const comments = this.commentService.getAll();
 
         res.json({ comments: comments });
       } else {
-        const comments = this.commentService.getAll(userId);
+        const comments = this.commentService.getByUser(req.user.id);
         res.json({ comments });
       }
     } catch (err) {
