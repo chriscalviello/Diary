@@ -2,10 +2,10 @@ const pathToDb = __dirname + "/../../database/index.json";
 
 var fs = require("fs");
 
-import AuthService from ".";
+import AuthenticationService from ".";
 import { User, LoggedUser } from "../../models/user";
 
-export class FakeAuthService implements AuthService {
+export class FakeAuthenticationService implements AuthenticationService {
   delete = () => {};
   login = (email: string, password: string) => {
     const data = fs.readFileSync(pathToDb, "utf8");

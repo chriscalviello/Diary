@@ -1,14 +1,14 @@
 import express, { Router } from "express";
 
-import AuthController from "../../controllers/auth";
-import AuthService from "../../services/auth";
+import { AuthenticationController } from "../../controllers/authentication";
+import AuthenticationService from "../../services/authentication";
 
-class AuthRoutes {
+export class AuthenticationRoutes {
   private router: Router;
-  constructor(authService: AuthService) {
+  constructor(authenticationService: AuthenticationService) {
     this.router = express.Router();
 
-    const controller = new AuthController(authService);
+    const controller = new AuthenticationController(authenticationService);
 
     this.router.get("/delete", controller.delete);
     this.router.post("/get", controller.get);
@@ -18,5 +18,3 @@ class AuthRoutes {
 
   getRouter = () => this.router;
 }
-
-export default AuthRoutes;

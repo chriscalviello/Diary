@@ -1,6 +1,6 @@
 import { User, LoggedUser } from "../../models/user";
 
-interface IAuthService {
+interface IAuthenticationService {
   delete: () => void;
   login: (email: string, password: string) => LoggedUser;
   signup: (
@@ -12,4 +12,4 @@ interface IAuthService {
   get: () => User[];
 }
 
-export default IAuthService;
+export default IAuthenticationService;

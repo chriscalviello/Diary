@@ -2,11 +2,11 @@ import express, { Request, Response, NextFunction } from "express";
 
 import HttpError from "./models/httpError";
 
-import AuthRoutes from "./routes/auth";
+import { AuthenticationRoutes } from "./routes/authentication";
 import CommentRoutes from "./routes/comment";
 import UserRoutes from "./routes/user";
 
-import AuthService from "./services/auth";
+import AuthenticationService from "./services/authentication";
 import CommentService from "./services/comment";
 import UserService from "./services/user";
 
@@ -17,20 +17,20 @@ class App {
   public port: number;
   private userService: UserService;
   private commentService: CommentService;
-  private authService: AuthService;
+  private authenticationService: AuthenticationService;
 
   constructor(
     port: number,
     userService: UserService,
     commentService: CommentService,
-    authService: AuthService
+    authenticationService: AuthenticationService
   ) {
     this.app = express();
 
     this.port = port;
     this.userService = userService;
     this.commentService = commentService;
-    this.authService = authService;
+    this.authenticationService = authenticationService;
 
     this.configureServerAndRoutes();
   }
@@ -75,7 +75,10 @@ class App {
       next();
     });
 
-    this.app.use("/api/auth", new AuthRoutes(this.authService).getRouter());
+    this.app.use(
+      "/api/auth",
+      new AuthenticationRoutes(this.authenticationService).getRouter()
+    );
 
     this.app.use("/api/users", new UserRoutes(this.userService).getRouter());
     this.app.use(

@@ -1,20 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 import HttpError from "../../models/httpError";
-import AuthService from "../../services/auth";
+import AuthenticationService from "../../services/authentication";
 
-class UserController {
-  private authService: AuthService;
+export class AuthenticationController {
+  private authenticationService: AuthenticationService;
 
-  constructor(authService: AuthService) {
-    this.authService = authService;
+  constructor(authenticationService: AuthenticationService) {
+    this.authenticationService = authenticationService;
   }
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
-    return this.authService.delete();
+    return this.authenticationService.delete();
   };
 
   get = async (req: Request, res: Response, next: NextFunction) => {
-    return this.authService.get();
+    return this.authenticationService.get();
   };
 
   login = async (req: Request, res: Response, next: NextFunction) => {
@@ -30,8 +30,8 @@ class UserController {
     }
 
     try {
-      const token = this.authService.login(email, password);
-      res.json({ token });
+      const user = this.authenticationService.login(email, password);
+      res.json({ user });
     } catch (err) {
       return next(new HttpError(err, 500));
     }
@@ -60,12 +60,15 @@ class UserController {
     }
 
     try {
-      const token = this.authService.signup(email, password, name, surname);
+      const token = this.authenticationService.signup(
+        email,
+        password,
+        name,
+        surname
+      );
       res.json({ token });
     } catch (err) {
       return next(new HttpError(err, 500));
     }
   };
 }
-
-export default UserController;
