@@ -26,7 +26,7 @@ export const AuthenticationProvider = ({ children }: Props) => {
   const [loading, setLoading] = useState(false);
   const history = useHistory();
 
-  const login = async (newUser: LoginUser) => {
+  const login = async (loginUser: LoginUser) => {
     try {
       setLoading(true);
       setError("");
@@ -36,7 +36,7 @@ export const AuthenticationProvider = ({ children }: Props) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...newUser }),
+        body: JSON.stringify({ ...loginUser }),
       });
       const responseData = await response.json();
 
@@ -44,8 +44,8 @@ export const AuthenticationProvider = ({ children }: Props) => {
         throw new Error(responseData.message);
       }
       const user: CurrentUser = {
-        email: newUser.email,
-        token: responseData.token,
+        email: responseData.user.email,
+        token: responseData.user.token,
       };
       setCurrentUser(user);
       localStorage.setItem("currentUser", JSON.stringify(user));
@@ -80,7 +80,7 @@ export const AuthenticationProvider = ({ children }: Props) => {
       }
 
       const user: CurrentUser = {
-        email: newUser.email,
+        email: responseData.email,
         token: responseData.token,
       };
       setCurrentUser(user);
