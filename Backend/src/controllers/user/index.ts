@@ -26,22 +26,9 @@ class UserController {
   };
 
   get = async (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-
-    if (!token) {
-      return next(new HttpError("You are not allowed to read users", 403));
-    }
-
-    const currentUserId = token.split("-")[3];
     const userId = req.query.id as string;
 
     try {
-      const currentUser = this.userService.getById(currentUserId);
-      if (!currentUser) {
-        return next(new HttpError("You are not allowed to read users", 403));
-      }
-
       if (userId) {
         const user = this.userService.getById(userId);
         if (!user) {
