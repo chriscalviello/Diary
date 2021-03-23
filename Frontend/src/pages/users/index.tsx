@@ -46,41 +46,43 @@ const Home: React.FC<Props> = ({ users, error, loading, onDeleteRequest }) => {
       </Button>
       <h1>{error}</h1>
       {loading && <h4>loading</h4>}
-      {!users.length && <b>There are no users to show</b>}
-
-      <TableContainer component={Paper}>
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Email</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Surname</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map((u, i) => {
-              const editCta: ItemCtaProps = {
-                icon: <EditIcon />,
-                onClick: () => history.push("/users/" + u.id),
-              };
-              const deleteCta: ItemCtaProps = {
-                icon: <DeleteIcon />,
-                onClick: () => onDeleteRequest(u.id),
-              };
-              return (
-                <User
-                  key={i}
-                  ctas={[editCta, deleteCta]}
-                  email={u.email}
-                  name={u.name}
-                  surname={u.surname}
-                />
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {users.length ? (
+        <TableContainer component={Paper}>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Email</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Surname</TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users.map((u, i) => {
+                const editCta: ItemCtaProps = {
+                  icon: <EditIcon />,
+                  onClick: () => history.push("/users/" + u.id),
+                };
+                const deleteCta: ItemCtaProps = {
+                  icon: <DeleteIcon />,
+                  onClick: () => onDeleteRequest(u.id),
+                };
+                return (
+                  <User
+                    key={i}
+                    ctas={[editCta, deleteCta]}
+                    email={u.email}
+                    name={u.name}
+                    surname={u.surname}
+                  />
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <b>There are no users to show</b>
+      )}
     </Container>
   );
 };
