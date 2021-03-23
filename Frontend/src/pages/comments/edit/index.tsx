@@ -112,33 +112,4 @@ const Container = styled.div`
   text-align: center;
 `;
 
-const Bottom = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`;
-
-interface InputProps {
-  label: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
-  placeholder?: string;
-  value: string;
-}
-
-interface TextProps extends InputProps {
-  type: "TEXT";
-}
-
-interface TextareaProps extends InputProps {
-  rows: number;
-  type: "TEXTAREA";
-}
-
-type InputType = TextProps | TextareaProps;
-
-interface CtaProps {
-  primary?: boolean;
-  label: string;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-}
-
 export default AddComment;

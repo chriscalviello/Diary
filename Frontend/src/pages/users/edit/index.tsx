@@ -80,8 +80,9 @@ const EditUser: React.FC<Props> = ({
   return (
     <Container>
       <h1>Edit user</h1>
-      {loading && <Loading />}
-      {error ? (
+      {loading ? (
+        <Loading />
+      ) : error ? (
         <h1>{error}</h1>
       ) : (
         <Form
@@ -136,9 +137,6 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-content: space-between;
-  text-align: center;
 `;
 
 export default EditUser;

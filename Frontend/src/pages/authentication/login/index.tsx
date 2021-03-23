@@ -46,33 +46,38 @@ const Login: React.FC<Props> = ({ error, loading, onActionRequest, title }) => {
   return (
     <Container>
       <h1>{title}</h1>
-      {loading && <h4>loading</h4>}
-      <h2>{error}</h2>
-      <Form
-        ctas={[
-          {
-            label: "Send",
-            primary: true,
-            onClick: handleSaveRequest,
-          },
-        ]}
-        inputs={[
-          {
-            error: emailError,
-            label: "Email",
-            onChange: handleEmailChanged,
-            type: "TEXT",
-            value: email,
-          },
-          {
-            error: passwordError,
-            label: "Password",
-            onChange: handlePasswordChanged,
-            type: "PASSWORD",
-            value: password,
-          },
-        ]}
-      />
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          {error && <h1>{error}</h1>}
+          <Form
+            ctas={[
+              {
+                label: "Send",
+                primary: true,
+                onClick: handleSaveRequest,
+              },
+            ]}
+            inputs={[
+              {
+                error: emailError,
+                label: "Email",
+                onChange: handleEmailChanged,
+                type: "TEXT",
+                value: email,
+              },
+              {
+                error: passwordError,
+                label: "Password",
+                onChange: handlePasswordChanged,
+                type: "PASSWORD",
+                value: password,
+              },
+            ]}
+          />
+        </>
+      )}
     </Container>
   );
 };
@@ -81,9 +86,6 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-content: space-between;
-  text-align: center;
 `;
 
 export default Login;

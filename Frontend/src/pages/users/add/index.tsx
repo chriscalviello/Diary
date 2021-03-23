@@ -89,8 +89,9 @@ const AddUser: React.FC<Props> = ({
   return (
     <Container>
       <h1>New user</h1>
-      {loading && <h4>loading</h4>}
-      {error ? (
+      {loading ? (
+        <Loading />
+      ) : error ? (
         <h1>{error}</h1>
       ) : (
         <Form
@@ -152,9 +153,6 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-content: space-between;
-  text-align: center;
 `;
 
 export default AddUser;
