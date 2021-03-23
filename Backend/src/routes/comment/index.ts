@@ -17,12 +17,12 @@ class CommentRoutes {
       AllowRouteTo([Roles.user, Roles.admin]),
       controller.delete
     );
-    this.router.post(
+    this.router.get(
       "/get",
       AllowRouteTo([Roles.user, Roles.admin]),
       controller.get
     );
-    this.router.post(
+    this.router.get(
       "/getById",
       AllowRouteTo([Roles.user, Roles.admin]),
       controller.getById

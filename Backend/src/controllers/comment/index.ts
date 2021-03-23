@@ -35,7 +35,7 @@ class CommentController {
   };
 
   getById = async (req: Request, res: Response, next: NextFunction) => {
-    const commentId = req.body.id;
+    const commentId = req.query.id as string;
 
     if (!commentId) {
       return next(new HttpError("A 'id' param is required", 500));
