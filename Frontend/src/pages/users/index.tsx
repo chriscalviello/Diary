@@ -47,6 +47,7 @@ const Home: React.FC<Props> = ({ users, error, loading, onDeleteRequest }) => {
             color="primary"
             startIcon={<AddIcon />}
             onClick={() => handleAddIconClick()}
+            style={{ marginBottom: "1rem" }}
           >
             New User
           </Button>
