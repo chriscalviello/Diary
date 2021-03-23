@@ -19,6 +19,12 @@ export interface CommentProps {
   title: string;
   body: string;
   date: string;
+  user: UserProps;
+}
+
+interface UserProps {
+  name: string;
+  surname: string;
 }
 
 const Home: React.FC<Props> = ({
@@ -61,6 +67,7 @@ const Home: React.FC<Props> = ({
             title={c.title}
             body={c.body}
             date={c.date}
+            user={c.user.surname + " " + c.user.name}
           />
         );
       })}
