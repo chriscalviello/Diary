@@ -1,17 +1,17 @@
-import { User } from "../user";
+import { v4 as uuidv4 } from "uuid";
 
 export class Comment {
   id: string;
   title: string;
   body: string;
   created_at: Date;
-  user: User;
+  userId: string;
 
-  constructor(id: string, title: string, body: string, user: User) {
-    this.id = id;
+  constructor(title: string, body: string, userId: string) {
+    this.id = uuidv4();
     this.title = title;
     this.body = body;
     this.created_at = new Date();
-    this.user = user;
+    this.userId = userId;
   }
 }

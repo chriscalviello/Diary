@@ -14,19 +14,26 @@ class CommentController {
   }
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-
-    if (!token) {
-      return next(new HttpError("You are not allowed to delete comments", 403));
+    const commentId = req.body.id;
+    if (!commentId) {
+      return next(new HttpError("A 'id' param is required", 500));
     }
 
-    const userId = token.split("-")[3];
-
-    const commentId = req.body.id;
-
     try {
-      this.commentService.delete(userId, commentId);
+      const comment = this.commentService.getById(commentId);
+      if (!comment) {
+        return next(new HttpError("Comment not found", 500));
+      }
+      if (req.user.role === "USER" && req.user.id !== comment.userId) {
+        return next(
+          new HttpError(
+            "You are not allowed to delete other user's comments",
+            403
+          )
+        );
+      }
+
+      this.commentService.delete(commentId);
 
       res.json();
     } catch (err) {

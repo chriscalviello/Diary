@@ -7,22 +7,18 @@ import { Comment } from "../../models/comment";
 import { User } from "../../models/user";
 
 export class FakeCommentService implements CommentService {
-  delete = (userId: string, id: string) => {
+  delete = (id: string) => {
     const data = fs.readFileSync(pathToDb, "utf8");
     const users = JSON.parse(data);
 
-    const user: User = users.find((u: User) => u.id === userId);
-    if (!user) {
-      throw "The provided user doesn't exist";
-    }
+    users.map((user: User) => {
+      const commentIndex = user.comments.findIndex((c) => c.id === id);
+      if (commentIndex !== -1) {
+        user.comments.splice(commentIndex, 1);
 
-    const commentIndex = user.comments.findIndex((c) => c.id === id);
-    if (commentIndex === -1) {
-      throw "The privded comment doesn't exist";
-    }
-    user.comments.splice(commentIndex, 1);
-
-    fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
+        fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
+      }
+    });
   };
   save = (userId: string, title: string, body: string, id: string | null) => {
     const data = fs.readFileSync(pathToDb, "utf8");
@@ -45,12 +41,7 @@ export class FakeCommentService implements CommentService {
 
       return comment;
     } else {
-      const comment = new Comment(
-        (user.comments.length + 1).toString(),
-        title,
-        body,
-        user
-      );
+      const comment = new Comment(title, body, user.id);
       user.comments.push(comment);
 
       fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
@@ -79,7 +70,7 @@ export class FakeCommentService implements CommentService {
     const comments = this.getAll();
 
     return comments
-      .filter((c) => c.user.id === id)
+      .filter((c) => c.userId === id)
       .sort((a, b) => (a.created_at > b.created_at ? -1 : 1));
   };
   private fixUserRelation = (user: User, comments: Comment[]) => {
