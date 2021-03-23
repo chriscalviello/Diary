@@ -13,6 +13,11 @@ class UserRoutes {
 
     this.router.post("/delete", AllowRouteTo([Roles.admin]), controller.delete);
     this.router.get("/get", AllowRouteTo([Roles.admin]), controller.get);
+    this.router.get(
+      "/getRoles",
+      AllowRouteTo([Roles.admin]),
+      controller.getRoles
+    );
     this.router.post("/save", AllowRouteTo([Roles.admin]), controller.save);
   }
 

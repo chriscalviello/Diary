@@ -63,6 +63,10 @@ class UserController {
     }
   };
 
+  getRoles = (req: Request, res: Response, next: NextFunction) => {
+    res.json({ roles: Roles });
+  };
+
   save = async (req: Request, res: Response, next: NextFunction) => {
     const email = req.body.email;
     const name = req.body.name;
