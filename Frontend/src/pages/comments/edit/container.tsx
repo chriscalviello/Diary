@@ -28,30 +28,33 @@ const EditCommentContainer: React.FC = ({}) => {
       setLoading(true);
       setError("");
 
-      const response = await fetch("http://localhost:5000/api/comments/get", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + currentUser?.token,
-        },
-        body: JSON.stringify({
-          id,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/comments/getById",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + currentUser?.token,
+          },
+          body: JSON.stringify({
+            id,
+          }),
+        }
+      );
       const responseData = await response.json();
 
       if (!response.ok) {
         throw new Error(responseData.message);
       }
 
-      if (!responseData.comments || !responseData.comments.length) {
+      if (!responseData.comment) {
         throw new Error("No comment found");
       }
 
       const data: Comment = {
-        id: responseData.comments[0].id,
-        body: responseData.comments[0].body,
-        title: responseData.comments[0].title,
+        id: responseData.comment.id,
+        body: responseData.comment.body,
+        title: responseData.comment.title,
       };
 
       setComment(data);
