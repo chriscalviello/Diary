@@ -32,7 +32,7 @@ export class FakeCommentService implements CommentService {
     if (id) {
       const comment = user.comments.find((c) => c.id === id);
       if (!comment) {
-        throw "The privded comment doesn't exist";
+        throw "The provided comment doesn't exist";
       }
       comment.body = body;
       comment.title = title;
