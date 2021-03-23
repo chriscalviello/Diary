@@ -29,16 +29,13 @@ const EditCommentContainer: React.FC = ({}) => {
       setError("");
 
       const response = await fetch(
-        "http://localhost:5000/api/comments/getById",
+        "http://localhost:5000/api/comments/getById?id=" + id,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + currentUser?.token,
           },
-          body: JSON.stringify({
-            id,
-          }),
         }
       );
       const responseData = await response.json();

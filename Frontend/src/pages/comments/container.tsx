@@ -14,7 +14,7 @@ const CommentsContainer: React.FC = ({}) => {
       setError("");
 
       const response = await fetch("http://localhost:5000/api/comments/get", {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + currentUser?.token,
