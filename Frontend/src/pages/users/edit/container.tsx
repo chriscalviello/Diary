@@ -19,9 +19,11 @@ const EditUserContainer: React.FC = ({}) => {
     email: "",
     name: "",
     surname: "",
+    role: "",
   });
+  const [roles, setRoles] = useState<string[]>([]);
 
-  const fetchUser = async () => {
+  const fetchData = async () => {
     if (!id) {
       return;
     }
@@ -29,19 +31,25 @@ const EditUserContainer: React.FC = ({}) => {
       setLoading(true);
       setError("");
 
-      const response = await fetch(
-        "http://localhost:5000/api/users/get?id=" + id,
-        {
+      const [responseUser, responseRoles] = await Promise.all([
+        fetch("http://localhost:5000/api/users/get?id=" + id, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + currentUser?.token,
           },
-        }
-      );
-      const responseData = await response.json();
+        }),
+        fetch("http://localhost:5000/api/users/getRoles", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + currentUser?.token,
+          },
+        }),
+      ]);
+      const responseData = await responseUser.json();
 
-      if (!response.ok) {
+      if (!responseUser.ok) {
         throw new Error(responseData.message);
       }
 
@@ -49,14 +57,27 @@ const EditUserContainer: React.FC = ({}) => {
         throw new Error("No user found");
       }
 
+      const responseDataRoles = await responseRoles.json();
+
+      if (!responseRoles.ok) {
+        throw new Error(responseData.message);
+      }
+
+      const roles = Object.values(responseDataRoles.roles) as string[];
+      if (!responseDataRoles.roles || !roles.length) {
+        throw new Error("No user's roles found");
+      }
+
       const data: User = {
         id: responseData.users[0].id,
         email: responseData.users[0].email,
         name: responseData.users[0].name,
         surname: responseData.users[0].surname,
+        role: responseData.users[0].role,
       };
 
       setUser(data);
+      setRoles(roles);
     } catch (err) {
       setError(err.message);
     }
@@ -64,7 +85,7 @@ const EditUserContainer: React.FC = ({}) => {
   };
 
   useEffect(() => {
-    fetchUser();
+    fetchData();
   }, []);
 
   const saveUser = async (data: User) => {
@@ -83,6 +104,7 @@ const EditUserContainer: React.FC = ({}) => {
           email: data.email,
           name: data.name,
           surname: data.surname,
+          role: data.role,
         }),
       });
       const responseData = await response.json();
@@ -113,6 +135,7 @@ const EditUserContainer: React.FC = ({}) => {
       loading={loading}
       onActionRequest={saveUser}
       onCancelRequest={goToList}
+      roles={roles}
     />
   );
 };

@@ -1,19 +1,16 @@
-import React, { useState, useEffect, MouseEventHandler } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import Form from "../../../components/form";
+import Roles, { Props as RolesProps } from "../roles";
 
 interface Props {
   user: User;
   error: string;
-  onActionRequest: React.Dispatch<{
-    id: string;
-    email: string;
-    name: string;
-    surname: string;
-  }>;
+  onActionRequest: React.Dispatch<User>;
   onCancelRequest: React.DispatchWithoutAction;
   loading: boolean;
+  roles: string[];
 }
 
 export interface User {
@@ -21,6 +18,7 @@ export interface User {
   email: string;
   name: string;
   surname: string;
+  role: string;
 }
 
 const EditUser: React.FC<Props> = ({
@@ -29,6 +27,7 @@ const EditUser: React.FC<Props> = ({
   loading,
   onActionRequest,
   onCancelRequest,
+  roles,
 }) => {
   const [email, setEmail] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
@@ -36,6 +35,7 @@ const EditUser: React.FC<Props> = ({
   const [nameError, setNameError] = useState<string>("");
   const [surname, setSurname] = useState<string>("");
   const [surnameError, setSurnameError] = useState<string>("");
+  const [role, setRole] = useState<string>("");
 
   useEffect(() => {
     if (!user) {
@@ -44,6 +44,7 @@ const EditUser: React.FC<Props> = ({
     setEmail(user.email);
     setName(user.name);
     setSurname(user.surname);
+    setRole(user.role);
   }, [user]);
 
   const handleSaveRequest = () => {
@@ -52,7 +53,7 @@ const EditUser: React.FC<Props> = ({
     setSurnameError(!name ? "Surname is required" : "");
 
     if (email && name && surname) {
-      onActionRequest({ id: user.id, email, name, surname });
+      onActionRequest({ id: user.id, email, name, surname, role });
     }
   };
 
@@ -69,6 +70,10 @@ const EditUser: React.FC<Props> = ({
   const handleSurnameChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSurnameError("");
     setSurname(e.target.value);
+  };
+
+  const handleRoleChanged = (newRole: string) => {
+    setRole(newRole);
   };
 
   return (
@@ -89,6 +94,13 @@ const EditUser: React.FC<Props> = ({
               onClick: onCancelRequest,
             },
           ]}
+          extra={
+            <Roles
+              roles={roles}
+              selectedRole={role}
+              onRoleChange={handleRoleChanged}
+            />
+          }
           inputs={[
             {
               error: emailError,

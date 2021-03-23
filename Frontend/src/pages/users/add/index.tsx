@@ -1,19 +1,16 @@
-import React, { useState, useEffect, MouseEventHandler } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import Form from "../../../components/form";
+import Roles from "../roles";
 
 interface Props {
   user: User;
   error: string;
-  onActionRequest: React.Dispatch<{
-    email: string;
-    password: string;
-    name: string;
-    surname: string;
-  }>;
+  onActionRequest: React.Dispatch<User>;
   onCancelRequest: React.DispatchWithoutAction;
   loading: boolean;
+  roles: string[];
 }
 
 export interface User {
@@ -21,6 +18,7 @@ export interface User {
   password: string;
   name: string;
   surname: string;
+  role: string;
 }
 
 const AddUser: React.FC<Props> = ({
@@ -29,6 +27,7 @@ const AddUser: React.FC<Props> = ({
   loading,
   onActionRequest,
   onCancelRequest,
+  roles,
 }) => {
   const [email, setEmail] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
@@ -38,6 +37,7 @@ const AddUser: React.FC<Props> = ({
   const [nameError, setNameError] = useState<string>("");
   const [surname, setSurname] = useState<string>("");
   const [surnameError, setSurnameError] = useState<string>("");
+  const [role, setRole] = useState<string>("");
 
   useEffect(() => {
     if (!user) {
@@ -47,6 +47,7 @@ const AddUser: React.FC<Props> = ({
     setPassword(user.password);
     setName(user.name);
     setSurname(user.surname);
+    setRole(user.role);
   }, [user]);
 
   const handleSaveRequest = () => {
@@ -56,7 +57,7 @@ const AddUser: React.FC<Props> = ({
     setSurnameError(!name ? "Surname is required" : "");
 
     if (email && password && name && surname) {
-      onActionRequest({ email, password, name, surname });
+      onActionRequest({ email, password, name, surname, role });
     }
   };
 
@@ -80,6 +81,10 @@ const AddUser: React.FC<Props> = ({
     setSurname(e.target.value);
   };
 
+  const handleRoleChanged = (newRole: string) => {
+    setRole(newRole);
+  };
+
   return (
     <Container>
       <h1>New user</h1>
@@ -98,6 +103,13 @@ const AddUser: React.FC<Props> = ({
               onClick: onCancelRequest,
             },
           ]}
+          extra={
+            <Roles
+              roles={roles}
+              selectedRole={role}
+              onRoleChange={handleRoleChanged}
+            />
+          }
           inputs={[
             {
               error: emailError,
