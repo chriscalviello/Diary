@@ -81,9 +81,9 @@ export const AuthenticationProvider = ({ children }: Props) => {
       }
 
       const user: CurrentUser = {
-        id: responseData.id,
-        email: responseData.email,
-        token: responseData.token,
+        id: responseData.user.id,
+        email: responseData.user.email,
+        token: responseData.user.token,
       };
       setCurrentUser(user);
       localStorage.setItem("currentUser", JSON.stringify(user));
