@@ -24,7 +24,7 @@ class CommentController {
       if (!comment) {
         return next(new HttpError("Comment not found", 500));
       }
-      if (req.user.role === "USER" && req.user.id !== comment.userId) {
+      if (req.user.id !== comment.userId) {
         return next(
           new HttpError(
             "You are not allowed to delete other user's comments",
@@ -93,6 +93,21 @@ class CommentController {
     }
 
     try {
+      if (commentId) {
+        const storedComment = this.commentService.getById(commentId);
+        if (!storedComment) {
+          return next(new HttpError("Comment not found", 500));
+        }
+        if (userId !== storedComment.userId) {
+          return next(
+            new HttpError(
+              "You are not allowed to edit other user's comments",
+              403
+            )
+          );
+        }
+      }
+
       const comment = this.commentService.save(userId, title, text, commentId);
 
       res.json({ comment });
