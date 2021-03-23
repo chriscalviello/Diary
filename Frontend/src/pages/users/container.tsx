@@ -33,6 +33,7 @@ const UsersContainer: React.FC = ({}) => {
             name: u.name,
             surname: u.surname,
             email: u.email,
+            role: u.role,
           };
           return user;
         })

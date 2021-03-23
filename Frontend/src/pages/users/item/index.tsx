@@ -8,6 +8,7 @@ interface Props {
   email: string;
   name: string;
   surname: string;
+  role: string;
 }
 
 export interface CtaProps {
@@ -15,12 +16,20 @@ export interface CtaProps {
   onClick: MouseEventHandler<HTMLButtonElement>;
 }
 
-const Item: React.FC<Props> = ({ ctas, email, name, surname, ...rest }) => {
+const Item: React.FC<Props> = ({
+  ctas,
+  email,
+  name,
+  surname,
+  role,
+  ...rest
+}) => {
   return (
     <TableRow>
       <TableCell>{email}</TableCell>
       <TableCell>{name}</TableCell>
       <TableCell>{surname}</TableCell>
+      <TableCell>{role}</TableCell>
       <TableCell>
         {ctas &&
           ctas?.map((c, i) => (

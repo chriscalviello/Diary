@@ -26,6 +26,7 @@ export interface UserProps {
   email: string;
   name: string;
   surname: string;
+  role: string;
 }
 
 const Home: React.FC<Props> = ({ users, error, loading, onDeleteRequest }) => {
@@ -57,6 +58,7 @@ const Home: React.FC<Props> = ({ users, error, loading, onDeleteRequest }) => {
                     <TableCell>Email</TableCell>
                     <TableCell>Name</TableCell>
                     <TableCell>Surname</TableCell>
+                    <TableCell>Role</TableCell>
                     <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
@@ -77,6 +79,7 @@ const Home: React.FC<Props> = ({ users, error, loading, onDeleteRequest }) => {
                         email={u.email}
                         name={u.name}
                         surname={u.surname}
+                        role={u.role}
                       />
                     );
                   })}
