@@ -75,6 +75,10 @@ class App {
       next();
     });
 
+    this.app.use((req: Request, res: Response, next: NextFunction) => {
+      setTimeout(next, 250);
+    });
+
     this.app.use(
       "/api/auth",
       new AuthenticationRoutes(this.authenticationService).getRouter()
