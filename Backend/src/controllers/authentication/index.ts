@@ -52,13 +52,13 @@ export class AuthenticationController {
     }
 
     try {
-      const token = this.authenticationService.signup(
+      const user = this.authenticationService.signup(
         email,
         password,
         name,
         surname
       );
-      res.json({ token });
+      res.json({ user });
     } catch (err) {
       return next(new HttpError(err, 500));
     }
