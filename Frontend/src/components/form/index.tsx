@@ -7,9 +7,10 @@ import TextField from "@material-ui/core/TextField";
 interface Props {
   ctas: CtaProps[];
   inputs: InputType[];
+  extra?: React.ReactNode;
 }
 
-const Form: React.FC<Props> = ({ ctas, inputs }) => {
+const Form: React.FC<Props> = ({ ctas, extra, inputs }) => {
   return (
     <Container>
       {inputs.map((input, i) => (
@@ -27,6 +28,8 @@ const Form: React.FC<Props> = ({ ctas, inputs }) => {
           value={input.value}
         />
       ))}
+
+      {extra}
 
       <CTAsContainer>
         {ctas.map((c, i) => (
