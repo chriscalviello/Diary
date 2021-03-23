@@ -44,6 +44,7 @@ export const AuthenticationProvider = ({ children }: Props) => {
         throw new Error(responseData.message);
       }
       const user: CurrentUser = {
+        id: responseData.user.id,
         email: responseData.user.email,
         token: responseData.user.token,
       };
@@ -80,6 +81,7 @@ export const AuthenticationProvider = ({ children }: Props) => {
       }
 
       const user: CurrentUser = {
+        id: responseData.id,
         email: responseData.email,
         token: responseData.token,
       };
@@ -133,6 +135,7 @@ export const useAuthentication = (): Context => {
 };
 
 type CurrentUser = {
+  id: string;
   email: string;
   token: string;
 };

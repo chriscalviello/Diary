@@ -34,6 +34,7 @@ const CommentsContainer: React.FC = ({}) => {
             title: c.title,
             date: new Date(c.created_at).toLocaleString(),
             user: {
+              id: c.user.id,
               name: c.user.name,
               surname: c.user.surname,
             },
@@ -70,8 +71,10 @@ const CommentsContainer: React.FC = ({}) => {
         }
       );
 
+      const responseData = await response.json();
+
       if (!response.ok) {
-        throw new Error("Something went wrong");
+        throw new Error(responseData.message);
       }
 
       fetchComments();

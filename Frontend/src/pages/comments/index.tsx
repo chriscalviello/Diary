@@ -7,6 +7,7 @@ import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Loading from "../../components/loading";
+import { useAuthentication } from "../../providers/authentication";
 
 interface Props {
   comments: CommentProps[];
@@ -24,6 +25,7 @@ export interface CommentProps {
 }
 
 interface UserProps {
+  id: string;
   name: string;
   surname: string;
 }
@@ -34,6 +36,7 @@ const Home: React.FC<Props> = ({
   loading,
   onDeleteRequest,
 }) => {
+  const { currentUser } = useAuthentication();
   const history = useHistory();
   const handleAddIconClick = () => {
     history.push("/addComment");
@@ -65,18 +68,23 @@ const Home: React.FC<Props> = ({
           </Button>
           {!comments.length && <b>There are no comments to show</b>}
           {comments.map((c, i) => {
-            const editCta: ItemCtaProps = {
-              icon: <EditIcon />,
-              onClick: () => history.push("/comments/" + c.id),
-            };
-            const deleteCta: ItemCtaProps = {
-              icon: <DeleteIcon />,
-              onClick: () => handleDeleteIconClick(c.id),
-            };
+            const ctas: ItemCtaProps[] =
+              currentUser && c.user.id === currentUser.id
+                ? [
+                    {
+                      icon: <EditIcon />,
+                      onClick: () => history.push("/comments/" + c.id),
+                    },
+                    {
+                      icon: <DeleteIcon />,
+                      onClick: () => handleDeleteIconClick(c.id),
+                    },
+                  ]
+                : [];
             return (
               <Comment
                 key={i}
-                ctas={[editCta, deleteCta]}
+                ctas={ctas}
                 title={c.title}
                 body={c.body}
                 date={c.date}
