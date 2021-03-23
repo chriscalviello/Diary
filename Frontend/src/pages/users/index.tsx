@@ -36,52 +36,57 @@ const Home: React.FC<Props> = ({ users, error, loading, onDeleteRequest }) => {
   return (
     <Container>
       <h1>Users</h1>
-      <Button
-        variant="contained"
-        color="primary"
-        startIcon={<AddIcon />}
-        onClick={() => handleAddIconClick()}
-      >
-        New User
-      </Button>
-      <h1>{error}</h1>
-      {loading && <h4>loading</h4>}
-      {users.length ? (
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Email</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Surname</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.map((u, i) => {
-                const editCta: ItemCtaProps = {
-                  icon: <EditIcon />,
-                  onClick: () => history.push("/users/" + u.id),
-                };
-                const deleteCta: ItemCtaProps = {
-                  icon: <DeleteIcon />,
-                  onClick: () => onDeleteRequest(u.id),
-                };
-                return (
-                  <User
-                    key={i}
-                    ctas={[editCta, deleteCta]}
-                    email={u.email}
-                    name={u.name}
-                    surname={u.surname}
-                  />
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+      {error ? (
+        <h1>{error}</h1>
       ) : (
-        <b>There are no users to show</b>
+        <>
+          {loading && <h4>loading</h4>}
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={() => handleAddIconClick()}
+          >
+            New User
+          </Button>
+          {users.length ? (
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Surname</TableCell>
+                    <TableCell></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {users.map((u, i) => {
+                    const editCta: ItemCtaProps = {
+                      icon: <EditIcon />,
+                      onClick: () => history.push("/users/" + u.id),
+                    };
+                    const deleteCta: ItemCtaProps = {
+                      icon: <DeleteIcon />,
+                      onClick: () => onDeleteRequest(u.id),
+                    };
+                    return (
+                      <User
+                        key={i}
+                        ctas={[editCta, deleteCta]}
+                        email={u.email}
+                        name={u.name}
+                        surname={u.surname}
+                      />
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : (
+            <b>There are no users to show</b>
+          )}
+        </>
       )}
     </Container>
   );
