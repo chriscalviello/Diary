@@ -2,6 +2,7 @@ import express, { Router } from "express";
 
 import UserController from "../../controllers/user";
 import UserService from "../../services/user";
+import { AllowRouteTo, Roles } from "../../authorization";
 
 class UserRoutes {
   private router: Router;
@@ -10,9 +11,9 @@ class UserRoutes {
 
     const controller = new UserController(userService);
 
-    this.router.post("/delete", controller.delete);
-    this.router.get("/get", controller.get);
-    this.router.post("/save", controller.save);
+    this.router.post("/delete", AllowRouteTo([Roles.admin]), controller.delete);
+    this.router.get("/get", AllowRouteTo([Roles.admin]), controller.get);
+    this.router.post("/save", AllowRouteTo([Roles.admin]), controller.save);
   }
 
   getRouter = () => this.router;

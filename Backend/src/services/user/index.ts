@@ -11,6 +11,7 @@ interface IUserService {
   ) => User;
   getAll: () => User[];
   getById: (userId: string) => User;
+  getByToken: (token: string) => User;
 }
 
 export default IUserService;

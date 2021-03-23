@@ -3,7 +3,7 @@ const pathToDb = __dirname + "/../../database/index.json";
 var fs = require("fs");
 
 import AuthService from ".";
-import { User } from "../../models/user";
+import { User, LoggedUser } from "../../models/user";
 
 export class FakeAuthService implements AuthService {
   delete = () => {};
@@ -11,14 +11,19 @@ export class FakeAuthService implements AuthService {
     const data = fs.readFileSync(pathToDb, "utf8");
     const users = JSON.parse(data);
 
-    const user = users.find(
+    const user: User = users.find(
       (u: User) => u.email === email && u.password === password
     );
     if (!user) {
       throw "Email or password is incorrect";
     }
 
-    return "fake-jwt-token-" + user.id;
+    const result: LoggedUser = {
+      token: "fake-jwt-token-" + user.id,
+      email: user.email,
+    };
+
+    return result;
   };
   signup = (email: string, password: string, name: string, surname: string) => {
     const data = fs.readFileSync(pathToDb, "utf8");

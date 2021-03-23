@@ -1,8 +1,8 @@
-import { User } from "../../models/user";
+import { User, LoggedUser } from "../../models/user";
 
 interface IAuthService {
   delete: () => void;
-  login: (email: string, password: string) => string;
+  login: (email: string, password: string) => LoggedUser;
   signup: (
     email: string,
     password: string,

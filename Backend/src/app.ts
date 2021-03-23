@@ -26,12 +26,13 @@ class App {
     authService: AuthService
   ) {
     this.app = express();
-    this.configureServerAndRoutes();
 
     this.port = port;
     this.userService = userService;
     this.commentService = commentService;
     this.authService = authService;
+
+    this.configureServerAndRoutes();
   }
 
   public start = async () => {
@@ -63,7 +64,19 @@ class App {
       next();
     });
 
+    this.app.use((req: Request, res: Response, next: NextFunction) => {
+      const authHeader = req.headers["authorization"];
+      const token = authHeader && authHeader.split(" ")[1];
+
+      if (token) {
+        req.user = this.userService.getByToken(token);
+      }
+
+      next();
+    });
+
     this.app.use("/api/auth", new AuthRoutes(this.authService).getRouter());
+
     this.app.use("/api/users", new UserRoutes(this.userService).getRouter());
     this.app.use(
       "/api/comments",
