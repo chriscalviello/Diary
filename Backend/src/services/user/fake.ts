@@ -70,7 +70,7 @@ export class FakeUserService implements UserService {
     return users.find((u: User) => u.id === id);
   };
   getByToken = (token: string) => {
-    const userId = token.split("-")[3];
+    const userId = token.split("|")[1];
     return this.getById(userId);
   };
 }

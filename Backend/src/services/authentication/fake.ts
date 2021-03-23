@@ -4,6 +4,7 @@ var fs = require("fs");
 
 import AuthenticationService from ".";
 import { User, LoggedUser } from "../../models/user";
+import { Roles } from "../../authorization";
 
 export class FakeAuthenticationService implements AuthenticationService {
   login = (email: string, password: string) => {
@@ -18,7 +19,7 @@ export class FakeAuthenticationService implements AuthenticationService {
     }
 
     const result: LoggedUser = {
-      token: "fake-jwt-token-" + user.id,
+      token: this.getJwtToken(user.id),
       email: user.email,
       id: user.id,
     };
@@ -33,23 +34,18 @@ export class FakeAuthenticationService implements AuthenticationService {
       throw "The provided email is already in use";
     }
 
-    const newUser = new User(
-      email,
-      password,
-      name,
-      surname,
-      (users.length + 1).toString()
-    );
+    const newUser = new User(email, password, name, surname, Roles.user);
     users.push({ ...newUser });
 
     fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
 
     const result: LoggedUser = {
-      token: "fake-jwt-token-" + newUser.id,
+      token: this.getJwtToken(newUser.id),
       email: newUser.email,
       id: newUser.id,
     };
 
     return result;
   };
+  private getJwtToken = (userId: string) => "fake-jwt-token|" + userId;
 }
