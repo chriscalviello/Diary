@@ -6,7 +6,6 @@ import AuthenticationService from ".";
 import { User, LoggedUser } from "../../models/user";
 
 export class FakeAuthenticationService implements AuthenticationService {
-  delete = () => {};
   login = (email: string, password: string) => {
     const data = fs.readFileSync(pathToDb, "utf8");
     const users = JSON.parse(data);
@@ -40,5 +39,4 @@ export class FakeAuthenticationService implements AuthenticationService {
 
     return "fake-jwt-token-" + newUser.id;
   };
-  get = () => [];
 }

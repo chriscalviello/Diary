@@ -10,8 +10,6 @@ export class AuthenticationRoutes {
 
     const controller = new AuthenticationController(authenticationService);
 
-    this.router.get("/delete", controller.delete);
-    this.router.post("/get", controller.get);
     this.router.post("/login", controller.login);
     this.router.post("/signup", controller.signup);
   }

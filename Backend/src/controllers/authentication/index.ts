@@ -9,14 +9,6 @@ export class AuthenticationController {
     this.authenticationService = authenticationService;
   }
 
-  delete = async (req: Request, res: Response, next: NextFunction) => {
-    return this.authenticationService.delete();
-  };
-
-  get = async (req: Request, res: Response, next: NextFunction) => {
-    return this.authenticationService.get();
-  };
-
   login = async (req: Request, res: Response, next: NextFunction) => {
     const email = req.body.email;
     const password = req.body.password;
