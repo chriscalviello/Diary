@@ -34,6 +34,13 @@ const Home: React.FC<Props> = ({ users, error, loading, onDeleteRequest }) => {
   const handleAddIconClick = () => {
     history.push("/addUser");
   };
+  const handleDeleteIconClick = (userId: string) => {
+    const r = confirm("Are tou sure?");
+    if (r) {
+      onDeleteRequest(userId);
+    }
+  };
+
   return (
     <Container>
       <h1>Users</h1>
@@ -71,7 +78,7 @@ const Home: React.FC<Props> = ({ users, error, loading, onDeleteRequest }) => {
                     };
                     const deleteCta: ItemCtaProps = {
                       icon: <DeleteIcon />,
-                      onClick: () => onDeleteRequest(u.id),
+                      onClick: () => handleDeleteIconClick(u.id),
                     };
                     return (
                       <User

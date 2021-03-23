@@ -37,6 +37,13 @@ const Home: React.FC<Props> = ({
   const handleAddIconClick = () => {
     history.push("/addComment");
   };
+  const handleDeleteIconClick = (commentId: string) => {
+    const r = confirm("Are tou sure?");
+    if (r) {
+      onDeleteRequest(commentId);
+    }
+  };
+
   return (
     <Container>
       <h1>Comments</h1>
@@ -58,7 +65,7 @@ const Home: React.FC<Props> = ({
         };
         const deleteCta: ItemCtaProps = {
           icon: <DeleteIcon />,
-          onClick: () => onDeleteRequest(c.id),
+          onClick: () => handleDeleteIconClick(c.id),
         };
         return (
           <Comment
