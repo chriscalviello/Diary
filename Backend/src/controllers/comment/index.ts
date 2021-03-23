@@ -81,14 +81,7 @@ class CommentController {
   save = async (req: Request, res: Response, next: NextFunction) => {
     const title = req.body.title;
     const text = req.body.text;
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-
-    if (!token) {
-      return next(new HttpError("You are not allowed to edit comments", 403));
-    }
-
-    const userId = token.split("-")[3];
+    const userId = req.user.id;
     const commentId = req.body.id;
 
     if (!title) {
