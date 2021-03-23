@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 import Form from "../../../components/form";
+import Loading from "../../../components/loading";
 
 interface Props {
   error: string;
@@ -45,6 +46,7 @@ const Login: React.FC<Props> = ({ error, loading, onActionRequest, title }) => {
   return (
     <Container>
       <h1>{title}</h1>
+      {loading && <h4>loading</h4>}
       <h2>{error}</h2>
       <Form
         ctas={[

@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import Loading from "../../components/loading";
 
 interface Props {
   comments: CommentProps[];
@@ -56,7 +57,7 @@ const Home: React.FC<Props> = ({
         New Comment
       </Button>
       <h1>{error}</h1>
-      {loading && <h4>loading</h4>}
+      {loading && <Loading />}
       {!comments.length && <b>There are no comments to show</b>}
       {comments.map((c, i) => {
         const editCta: ItemCtaProps = {

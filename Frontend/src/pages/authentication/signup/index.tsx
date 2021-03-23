@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 import Form from "../../../components/form";
+import Loading from "../../../components/loading";
 
 interface Props {
   error: string;
@@ -78,6 +79,7 @@ const Signup: React.FC<Props> = ({
     <Container>
       <h1>{title}</h1>
       <h2>{error}</h2>
+      {loading && <Loading />}
       <Form
         ctas={[
           {

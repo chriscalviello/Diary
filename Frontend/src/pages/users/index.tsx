@@ -13,6 +13,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import Loading from "../../components/loading";
 
 interface Props {
   users: UserProps[];
@@ -48,7 +49,7 @@ const Home: React.FC<Props> = ({ users, error, loading, onDeleteRequest }) => {
         <h1>{error}</h1>
       ) : (
         <>
-          {loading && <h4>loading</h4>}
+          {loading && <Loading />}
           <Button
             variant="contained"
             color="primary"

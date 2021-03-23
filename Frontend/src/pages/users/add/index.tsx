@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import Form from "../../../components/form";
 import Roles from "../roles";
+import Loading from "../../../components/loading";
 
 interface Props {
   user: User;
@@ -88,6 +89,7 @@ const AddUser: React.FC<Props> = ({
   return (
     <Container>
       <h1>New user</h1>
+      {loading && <h4>loading</h4>}
       {error ? (
         <h1>{error}</h1>
       ) : (
@@ -142,7 +144,6 @@ const AddUser: React.FC<Props> = ({
           ]}
         />
       )}
-      {loading && <h4>loading</h4>}
     </Container>
   );
 };

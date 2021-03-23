@@ -2,6 +2,7 @@ import React, { useState, useEffect, MouseEventHandler } from "react";
 import styled from "styled-components";
 
 import Form from "../../../components/form";
+import Loading from "../../../components/loading";
 
 interface Props {
   comment: Comment;
@@ -60,6 +61,7 @@ const AddComment: React.FC<Props> = ({
   return (
     <Container>
       <h1>{comment.id ? "Edit comment" : "New comment"}</h1>
+      {loading && <Loading />}
       {error ? (
         <h1>{error}</h1>
       ) : (
@@ -94,7 +96,6 @@ const AddComment: React.FC<Props> = ({
           ]}
         />
       )}
-      {loading && <h4>loading</h4>}
     </Container>
   );
 };

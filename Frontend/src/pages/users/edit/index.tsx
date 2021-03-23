@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import Form from "../../../components/form";
 import Roles, { Props as RolesProps } from "../roles";
+import Loading from "../../../components/loading";
 
 interface Props {
   user: User;
@@ -79,6 +80,7 @@ const EditUser: React.FC<Props> = ({
   return (
     <Container>
       <h1>Edit user</h1>
+      {loading && <Loading />}
       {error ? (
         <h1>{error}</h1>
       ) : (
@@ -126,7 +128,6 @@ const EditUser: React.FC<Props> = ({
           ]}
         />
       )}
-      {loading && <h4>loading</h4>}
     </Container>
   );
 };
