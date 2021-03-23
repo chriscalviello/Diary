@@ -4,6 +4,7 @@ var fs = require("fs");
 
 import UserService from ".";
 import { User } from "../../models/user";
+import { Roles } from "../../authorization";
 
 export class FakeUserService implements UserService {
   delete = (curentUserId: string, id: string) => {
@@ -23,18 +24,37 @@ export class FakeUserService implements UserService {
 
     fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
   };
-  create = (email: string, password: string, name: string, surname: string) => {
+  create = (
+    email: string,
+    password: string,
+    name: string,
+    surname: string,
+    role: Roles
+  ) => {
     const data = fs.readFileSync(pathToDb, "utf8");
     const users = JSON.parse(data);
 
-    const newUser = new User(email, password, name, surname, users.length + 1);
+    const newUser = new User(
+      email,
+      password,
+      name,
+      surname,
+      role,
+      (users.length + 1).toString()
+    );
     users.push({ ...newUser });
 
     fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
 
     return newUser;
   };
-  edit = (email: string, name: string, surname: string, id: string) => {
+  edit = (
+    email: string,
+    name: string,
+    surname: string,
+    id: string,
+    role: Roles
+  ) => {
     const data = fs.readFileSync(pathToDb, "utf8");
     const users = JSON.parse(data);
 
@@ -45,6 +65,7 @@ export class FakeUserService implements UserService {
     user.email = email;
     user.name = name;
     user.surname = surname;
+    user.role = role;
 
     fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
 
