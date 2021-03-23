@@ -20,6 +20,7 @@ export class FakeAuthenticationService implements AuthenticationService {
     const result: LoggedUser = {
       token: "fake-jwt-token-" + user.id,
       email: user.email,
+      id: user.id,
     };
 
     return result;
@@ -43,6 +44,12 @@ export class FakeAuthenticationService implements AuthenticationService {
 
     fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
 
-    return "fake-jwt-token-" + newUser.id;
+    const result: LoggedUser = {
+      token: "fake-jwt-token-" + newUser.id,
+      email: newUser.email,
+      id: newUser.id,
+    };
+
+    return result;
   };
 }

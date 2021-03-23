@@ -7,7 +7,7 @@ interface IAuthenticationService {
     password: string,
     name: string,
     surname: string
-  ) => string;
+  ) => LoggedUser;
 }
 
 export default IAuthenticationService;
