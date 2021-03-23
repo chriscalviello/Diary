@@ -60,41 +60,44 @@ const AddComment: React.FC<Props> = ({
 
   return (
     <Container>
-      <h1>{comment.id ? "Edit comment" : "New comment"}</h1>
-      {loading && <Loading />}
-      {error ? (
+      {loading ? (
+        <Loading />
+      ) : error ? (
         <h1>{error}</h1>
       ) : (
-        <Form
-          ctas={[
-            {
-              label: "Save",
-              primary: true,
-              onClick: handleSaveRequest,
-            },
-            {
-              label: "Cancel",
-              onClick: onCancelRequest,
-            },
-          ]}
-          inputs={[
-            {
-              error: titleError,
-              label: "Title",
-              onChange: handleTitleChanged,
-              type: "TEXT",
-              value: title,
-            },
-            {
-              error: bodyError,
-              label: "Body",
-              onChange: handleBodyChanged,
-              type: "TEXTAREA",
-              rows: 5,
-              value: body,
-            },
-          ]}
-        />
+        <>
+          <h1>{comment.id ? "Edit comment" : "New comment"}</h1>
+          <Form
+            ctas={[
+              {
+                label: "Save",
+                primary: true,
+                onClick: handleSaveRequest,
+              },
+              {
+                label: "Cancel",
+                onClick: onCancelRequest,
+              },
+            ]}
+            inputs={[
+              {
+                error: titleError,
+                label: "Title",
+                onChange: handleTitleChanged,
+                type: "TEXT",
+                value: title,
+              },
+              {
+                error: bodyError,
+                label: "Body",
+                onChange: handleBodyChanged,
+                type: "TEXTAREA",
+                rows: 5,
+                value: body,
+              },
+            ]}
+          />
+        </>
       )}
     </Container>
   );

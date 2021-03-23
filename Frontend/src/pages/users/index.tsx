@@ -45,11 +45,13 @@ const Home: React.FC<Props> = ({ users, error, loading, onDeleteRequest }) => {
   return (
     <Container>
       <h1>Users</h1>
-      {error ? (
+
+      {loading ? (
+        <Loading />
+      ) : error ? (
         <h1>{error}</h1>
       ) : (
         <>
-          {loading && <Loading />}
           <Button
             variant="contained"
             color="primary"

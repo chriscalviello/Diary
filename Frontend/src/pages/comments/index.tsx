@@ -48,37 +48,44 @@ const Home: React.FC<Props> = ({
   return (
     <Container>
       <h1>Comments</h1>
-      <Button
-        variant="contained"
-        color="primary"
-        startIcon={<AddIcon />}
-        onClick={() => handleAddIconClick()}
-      >
-        New Comment
-      </Button>
-      <h1>{error}</h1>
-      {loading && <Loading />}
-      {!comments.length && <b>There are no comments to show</b>}
-      {comments.map((c, i) => {
-        const editCta: ItemCtaProps = {
-          icon: <EditIcon />,
-          onClick: () => history.push("/comments/" + c.id),
-        };
-        const deleteCta: ItemCtaProps = {
-          icon: <DeleteIcon />,
-          onClick: () => handleDeleteIconClick(c.id),
-        };
-        return (
-          <Comment
-            key={i}
-            ctas={[editCta, deleteCta]}
-            title={c.title}
-            body={c.body}
-            date={c.date}
-            user={c.user.surname + " " + c.user.name}
-          />
-        );
-      })}
+
+      {loading ? (
+        <Loading />
+      ) : error ? (
+        <h1>{error}</h1>
+      ) : (
+        <>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={() => handleAddIconClick()}
+          >
+            New Comment
+          </Button>
+          {!comments.length && <b>There are no comments to show</b>}
+          {comments.map((c, i) => {
+            const editCta: ItemCtaProps = {
+              icon: <EditIcon />,
+              onClick: () => history.push("/comments/" + c.id),
+            };
+            const deleteCta: ItemCtaProps = {
+              icon: <DeleteIcon />,
+              onClick: () => handleDeleteIconClick(c.id),
+            };
+            return (
+              <Comment
+                key={i}
+                ctas={[editCta, deleteCta]}
+                title={c.title}
+                body={c.body}
+                date={c.date}
+                user={c.user.surname + " " + c.user.name}
+              />
+            );
+          })}
+        </>
+      )}
     </Container>
   );
 };
