@@ -3,6 +3,7 @@ import express, { Router } from "express";
 import CommentController from "../../controllers/comment";
 import CommentService from "../../services/comment";
 import UserService from "../../services/user";
+import { AllowRouteTo, Roles } from "../../authorization";
 
 class CommentRoutes {
   private router: Router;
@@ -11,9 +12,21 @@ class CommentRoutes {
 
     const controller = new CommentController(commentService, userService);
 
-    this.router.post("/delete", controller.delete);
-    this.router.post("/get", controller.get);
-    this.router.post("/save", controller.save);
+    this.router.post(
+      "/delete",
+      AllowRouteTo([Roles.user, Roles.admin]),
+      controller.delete
+    );
+    this.router.post(
+      "/get",
+      AllowRouteTo([Roles.user, Roles.admin]),
+      controller.get
+    );
+    this.router.post(
+      "/save",
+      AllowRouteTo([Roles.user, Roles.admin]),
+      controller.save
+    );
   }
 
   getRouter = () => this.router;
