@@ -2,7 +2,7 @@ import { User } from "../../models/user";
 import { Roles } from "../../authorization";
 
 interface IUserService {
-  delete: (currentUserId: string, id: string) => void;
+  delete: (id: string) => void;
   edit: (
     email: string,
     name: string,

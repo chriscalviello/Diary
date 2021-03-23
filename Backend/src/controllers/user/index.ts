@@ -11,19 +11,13 @@ class UserController {
   }
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-
-    if (!token) {
-      return next(new HttpError("You are not allowed to delete comments", 403));
+    const userId = req.body.id;
+    if (!userId) {
+      return next(new HttpError("A 'id' param is required", 500));
     }
 
-    const currentUserId = token.split("-")[3];
-
-    const userId = req.body.id;
-
     try {
-      this.userService.delete(currentUserId, userId);
+      this.userService.delete(userId);
 
       res.json();
     } catch (err) {
