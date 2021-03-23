@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import HttpError from "../../models/httpError";
 import UserService from "../../services/user";
+import { Roles } from "../../authorization";
 
 class UserController {
   private userService: UserService;
@@ -66,14 +67,6 @@ class UserController {
     const email = req.body.email;
     const name = req.body.name;
     const surname = req.body.surname;
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-
-    if (!token) {
-      return next(new HttpError("You are not allowed to edit comments", 403));
-    }
-
-    const currentUserId = token.split("-")[3];
 
     if (!email) {
       return next(new HttpError("A 'email' param is required", 500));
@@ -91,10 +84,21 @@ class UserController {
 
     try {
       if (userId) {
-        const user = this.userService.edit(email, name, surname, userId);
+        if (req.user.role === "USER" && req.user.id !== userId) {
+          return next(
+            new HttpError("You are not allowed to edit other users", 403)
+          );
+        }
 
+        const user = this.userService.edit(email, name, surname, userId);
         res.json({ user });
       } else {
+        if (req.user.role === "USER") {
+          return next(
+            new HttpError("You are not allowed to create users", 403)
+          );
+        }
+
         const password = req.body.password;
         if (!password) {
           return next(new HttpError("A 'password' param is required", 500));
