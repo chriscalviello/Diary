@@ -6,21 +6,32 @@ import AuthRoutes from "./routes/auth";
 import CommentRoutes from "./routes/comment";
 import UserRoutes from "./routes/user";
 
-import { FakeAuthService } from "./services/auth/fake";
-import { FakeCommentService } from "./services/comment/fake";
-import { FakeUserService } from "./services/user/fake";
+import AuthService from "./services/auth";
+import CommentService from "./services/comment";
+import UserService from "./services/user";
 
 import LogService from "./services/log";
 
 class App {
   public app: express.Application;
   public port: number;
+  private userService: UserService;
+  private commentService: CommentService;
+  private authService: AuthService;
 
-  constructor(port: number) {
+  constructor(
+    port: number,
+    userService: UserService,
+    commentService: CommentService,
+    authService: AuthService
+  ) {
     this.app = express();
     this.configureServerAndRoutes();
 
     this.port = port;
+    this.userService = userService;
+    this.commentService = commentService;
+    this.authService = authService;
   }
 
   public start = async () => {
@@ -52,20 +63,11 @@ class App {
       next();
     });
 
-    this.app.use(
-      "/api/auth",
-      new AuthRoutes(new FakeAuthService()).getRouter()
-    );
-    this.app.use(
-      "/api/users",
-      new UserRoutes(new FakeUserService()).getRouter()
-    );
+    this.app.use("/api/auth", new AuthRoutes(this.authService).getRouter());
+    this.app.use("/api/users", new UserRoutes(this.userService).getRouter());
     this.app.use(
       "/api/comments",
-      new CommentRoutes(
-        new FakeCommentService(),
-        new FakeUserService()
-      ).getRouter()
+      new CommentRoutes(this.commentService, this.userService).getRouter()
     );
 
     this.app.use((req: Request, res: Response, next: NextFunction) => {
