@@ -32,7 +32,13 @@ export class FakeAuthenticationService implements AuthenticationService {
       throw "The provided email is already in use";
     }
 
-    const newUser = new User(email, password, name, surname, users.length + 1);
+    const newUser = new User(
+      email,
+      password,
+      name,
+      surname,
+      (users.length + 1).toString()
+    );
     users.push({ ...newUser });
 
     fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
