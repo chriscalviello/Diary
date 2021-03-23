@@ -7,7 +7,9 @@ export const AllowRouteTo = (allowedRoles: Roles[]) => {
     if (user && allowedRoles.includes(user.role)) {
       next();
     } else {
-      res.status(403).json({ message: "You are not allowed" });
+      res
+        .status(403)
+        .json({ message: "You are not allowed to access this resource" });
     }
   };
 };
