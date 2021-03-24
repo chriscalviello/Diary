@@ -66,7 +66,9 @@ const Home: React.FC<Props> = ({
           >
             New Comment
           </Button>
-          {!comments.length && <b>There are no comments to show</b>}
+          {!comments.length && (
+            <b style={{ marginTop: "1rem" }}>There are no comments to show</b>
+          )}
           {comments.map((c, i) => {
             const ctas: ItemCtaProps[] =
               currentUser && c.user.id === currentUser.id
