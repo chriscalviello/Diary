@@ -11,7 +11,7 @@ interface Props {
   ctas?: CtaProps[];
   title: string;
   date: string;
-  user: string;
+  author: string;
 }
 
 export interface CtaProps {
@@ -19,10 +19,17 @@ export interface CtaProps {
   onClick: MouseEventHandler<HTMLButtonElement>;
 }
 
-const Item: React.FC<Props> = ({ ctas, body, date, title, user, ...rest }) => {
+const Item: React.FC<Props> = ({
+  author,
+  ctas,
+  body,
+  date,
+  title,
+  ...rest
+}) => {
   return (
     <Card style={{ textAlign: "left", overflow: "initial" }} {...rest}>
-      <CardHeader title={title} subheader={"by " + user + ", on " + date} />
+      <CardHeader title={title} subheader={"by " + author + ", on " + date} />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           {body}

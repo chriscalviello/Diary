@@ -34,7 +34,7 @@ const CommentsContainer: React.FC = ({}) => {
             body: c.body,
             title: c.title,
             date: new Date(c.created_at).toLocaleString(),
-            user: {
+            author: {
               id: c.user.id,
               name: c.user.name,
               surname: c.user.surname,

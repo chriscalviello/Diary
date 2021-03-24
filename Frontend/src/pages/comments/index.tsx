@@ -21,7 +21,7 @@ export interface CommentProps {
   title: string;
   body: string;
   date: string;
-  user: UserProps;
+  author: UserProps;
 }
 
 interface UserProps {
@@ -71,7 +71,8 @@ const Home: React.FC<Props> = ({
           )}
           {comments.map((c, i) => {
             const ctas: ItemCtaProps[] =
-              currentUser && c.user.id === currentUser.id
+              (c.author && currentUser && c.author.id === currentUser.id) ||
+              !c.author
                 ? [
                     {
                       icon: <EditIcon />,
@@ -90,7 +91,11 @@ const Home: React.FC<Props> = ({
                 title={c.title}
                 body={c.body}
                 date={c.date}
-                user={c.user.surname + " " + c.user.name}
+                author={
+                  currentUser && c.author.id === currentUser.id
+                    ? "me"
+                    : c.author.surname + " " + c.author.name
+                }
               />
             );
           })}
