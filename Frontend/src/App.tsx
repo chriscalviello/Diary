@@ -11,6 +11,7 @@ import CommentsContainer from "./pages/comments/container";
 import EditCommentContainer from "./pages/comments/edit/container";
 import LoginContainer from "./pages/authentication/login/container";
 import SignupContainer from "./pages/authentication/signup/container";
+import NotFound from "./pages/notFound";
 import ProtectedRoute from "./protectedRoute";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
@@ -84,6 +85,7 @@ const Contents: React.FC = () => {
             <ProtectedRoute path="/addUser" component={AddUserContainer} />
             <ProtectedRoute path="/users/:id" component={EditUserContainer} />
             <ProtectedRoute path="/users" component={UsersContainer} />
+            <Route component={NotFound} />
           </Switch>
         </Right>
       </Content>
