@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useAuthentication } from "../../../providers/authentication";
 import { useParams } from "react-router-dom";
 import Edit, { User } from ".";
+import { BASE_API_URL } from "../../../constants";
 
 interface ParamTypes {
   id: string;
@@ -32,14 +33,14 @@ const EditUserContainer: React.FC = ({}) => {
       setError("");
 
       const [responseUser, responseRoles] = await Promise.all([
-        fetch("http://localhost:5000/api/users/get?id=" + id, {
+        fetch(BASE_API_URL + "/users/get?id=" + id, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + currentUser?.token,
           },
         }),
-        fetch("http://localhost:5000/api/users/getRoles", {
+        fetch(BASE_API_URL + "/users/getRoles", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -93,7 +94,7 @@ const EditUserContainer: React.FC = ({}) => {
       setLoading(true);
       setError("");
 
-      const response = await fetch("http://localhost:5000/api/users/save", {
+      const response = await fetch(BASE_API_URL + "/users/save", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

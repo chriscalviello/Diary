@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuthentication } from "../../providers/authentication";
 import Home, { CommentProps } from ".";
+import { BASE_API_URL } from "../../constants";
 
 const CommentsContainer: React.FC = ({}) => {
   const [error, setError] = useState("");
@@ -13,7 +14,7 @@ const CommentsContainer: React.FC = ({}) => {
       setLoading(true);
       setError("");
 
-      const response = await fetch("http://localhost:5000/api/comments/get", {
+      const response = await fetch(BASE_API_URL + "/comments/get", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -57,19 +58,16 @@ const CommentsContainer: React.FC = ({}) => {
       setLoading(true);
       setError("");
 
-      const response = await fetch(
-        "http://localhost:5000/api/comments/delete",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + currentUser?.token,
-          },
-          body: JSON.stringify({
-            id,
-          }),
-        }
-      );
+      const response = await fetch(BASE_API_URL + "/comments/delete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + currentUser?.token,
+        },
+        body: JSON.stringify({
+          id,
+        }),
+      });
 
       const responseData = await response.json();
 

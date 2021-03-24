@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useHistory } from "react-router-dom";
+import { BASE_API_URL } from "../../constants";
 
 type Context = {
   currentUser?: CurrentUser;
@@ -31,7 +32,7 @@ export const AuthenticationProvider = ({ children }: Props) => {
       setLoading(true);
       setError("");
 
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch(BASE_API_URL + "/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +69,7 @@ export const AuthenticationProvider = ({ children }: Props) => {
       setLoading(true);
       setError("");
 
-      const response = await fetch("http://localhost:5000/api/auth/signup", {
+      const response = await fetch(BASE_API_URL + "/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

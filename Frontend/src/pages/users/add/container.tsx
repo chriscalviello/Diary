@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useAuthentication } from "../../../providers/authentication";
 import Add, { User } from ".";
+import { BASE_API_URL } from "../../../constants";
 
 const AddUserContainer: React.FC = ({}) => {
   const history = useHistory();
@@ -22,7 +23,7 @@ const AddUserContainer: React.FC = ({}) => {
       setLoading(true);
       setError("");
 
-      const response = await fetch("http://localhost:5000/api/users/getRoles", {
+      const response = await fetch(BASE_API_URL + "/users/getRoles", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +64,7 @@ const AddUserContainer: React.FC = ({}) => {
       setLoading(true);
       setError("");
 
-      const response = await fetch("http://localhost:5000/api/users/save", {
+      const response = await fetch(BASE_API_URL + "/users/save", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

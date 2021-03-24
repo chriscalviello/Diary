@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useAuthentication } from "../../../providers/authentication";
 import { useParams } from "react-router-dom";
 import Edit, { Comment } from ".";
+import { BASE_API_URL } from "../../../constants";
 
 interface ParamTypes {
   id: string;
@@ -29,7 +30,7 @@ const EditCommentContainer: React.FC = ({}) => {
       setError("");
 
       const response = await fetch(
-        "http://localhost:5000/api/comments/getById?id=" + id,
+        BASE_API_URL + "/comments/getById?id=" + id,
         {
           method: "GET",
           headers: {
@@ -70,7 +71,7 @@ const EditCommentContainer: React.FC = ({}) => {
       setLoading(true);
       setError("");
 
-      const response = await fetch("http://localhost:5000/api/comments/save", {
+      const response = await fetch(BASE_API_URL + "/comments/save", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

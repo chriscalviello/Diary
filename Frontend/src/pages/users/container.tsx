@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuthentication } from "../../providers/authentication";
 import Home, { UserProps } from ".";
+import { BASE_API_URL } from "../../constants";
 
 const UsersContainer: React.FC = ({}) => {
   const [error, setError] = useState("");
@@ -13,7 +14,7 @@ const UsersContainer: React.FC = ({}) => {
       setLoading(true);
       setError("");
 
-      const response = await fetch("http://localhost:5000/api/users/get", {
+      const response = await fetch(BASE_API_URL + "/users/get", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +54,7 @@ const UsersContainer: React.FC = ({}) => {
       setLoading(true);
       setError("");
 
-      const response = await fetch("http://localhost:5000/api/users/delete", {
+      const response = await fetch(BASE_API_URL + "/users/delete", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
