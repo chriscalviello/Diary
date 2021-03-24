@@ -28,7 +28,7 @@ class CommentController {
       if (!comment) {
         return next(new HttpError("Comment not found", 500));
       }
-      if (req.user.id !== comment.userId) {
+      if (req.user.id !== comment.user.id) {
         return next(
           new HttpError(
             "You are not allowed to delete other user's comments",
@@ -112,7 +112,7 @@ class CommentController {
         if (!storedComment) {
           return next(new HttpError("Comment not found", 500));
         }
-        if (userId !== storedComment.userId) {
+        if (userId !== storedComment.user.id) {
           return next(
             new HttpError(
               "You are not allowed to edit other user's comments",

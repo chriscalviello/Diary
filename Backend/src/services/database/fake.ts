@@ -29,7 +29,7 @@ export class FakeDatabaseService implements DatabaseService {
 
   private fixUserRelation = (user: User, comments: Comment[]) => {
     return comments.map((c: Comment) => {
-      return new CommentWithUser(c.id, c.title, c.body, c.created_at, user);
+      return new CommentWithUser(c, user);
     });
   };
 }

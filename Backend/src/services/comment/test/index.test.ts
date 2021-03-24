@@ -9,7 +9,7 @@ const mockedDatabaseService = mocked.FakeDatabaseService;
 
 const fixUserRelation = (user: User, comments: Comment[]) => {
   return comments.map((c: Comment) => {
-    return new CommentWithUser(c.id, c.title, c.body, c.created_at, user);
+    return new CommentWithUser(c, user);
   });
 };
 
@@ -46,14 +46,12 @@ describe("FakeCommentService", () => {
             title: "title3",
             body: "body3",
             created_at: new Date(2020, 1, 1),
-            userId: "1",
           },
           {
             id: "5",
             title: "title5",
             body: "body5",
             created_at: new Date(2021, 1, 1),
-            userId: "1",
           },
         ],
         role: Roles.admin,
@@ -70,7 +68,6 @@ describe("FakeCommentService", () => {
             title: "title3",
             body: "body3",
             created_at: new Date(),
-            userId: "2",
           },
         ],
         role: Roles.user,
@@ -84,10 +81,8 @@ describe("FakeCommentService", () => {
     expect(comments[0].id).toBe("5");
   });
 
-  it("should get empty array when getByUser", () => {
-    const comments = sut.getByUser("invalidUser");
-
-    expect(comments).toHaveLength(0);
+  it("should throw an error when getByUser", () => {
+    expect(() => sut.getByUser("invalidUser")).toThrow();
   });
 
   it("should getById", () => {

@@ -11,15 +11,13 @@
                 "id": "1f1f020f-3d21-469b-b661-08f1c95e0993",
                 "title": "First comment",
                 "body": "My very first comment",
-                "created_at": "2021-03-24T07:38:52.608Z",
-                "userId": "109d35ce-b665-4b92-b1ee-950f3fd90e62"
+                "created_at": "2021-03-24T07:38:52.608Z"
             },
             {
                 "id": "2e929341-0e65-4434-8ce5-3d1fc0cb57f8",
                 "title": "My second comment",
                 "body": "Just my second comment",
-                "created_at": "2021-03-24T07:39:02.367Z",
-                "userId": "109d35ce-b665-4b92-b1ee-950f3fd90e62"
+                "created_at": "2021-03-24T07:39:02.367Z"
             }
         ]
     },
@@ -35,8 +33,7 @@
                 "id": "bf53b0e3-d682-485a-8134-d34d4fa65d19",
                 "title": "This is a simple title",
                 "body": "This is a simple comment",
-                "created_at": "2021-03-24T07:38:29.758Z",
-                "userId": "e3847a56-7756-443a-84bf-88d74ef8f0cf"
+                "created_at": "2021-03-24T07:38:29.758Z"
             }
         ]
     }

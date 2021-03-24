@@ -1,6 +1,6 @@
 import DatabaseService from "../../services/database";
 import CommentService from ".";
-import { Comment } from "../../models/comment";
+import { Comment, CommentWithUser } from "../../models/comment";
 import { User } from "../../models/user";
 
 export class FakeCommentService implements CommentService {
@@ -41,7 +41,7 @@ export class FakeCommentService implements CommentService {
 
       return comment;
     } else {
-      const comment = new Comment(title, body, user.id);
+      const comment = new Comment(title, body);
       user.comments.push(comment);
 
       this.databaseService.updateData(users);
@@ -59,13 +59,16 @@ export class FakeCommentService implements CommentService {
   getById = (id: string) => {
     const comments = this.getAll();
 
-    return comments.find((c: Comment) => c.id === id);
+    return comments.find((c: CommentWithUser) => c.id === id);
   };
   getByUser = (id: string) => {
-    const comments = this.getAll();
+    const users = this.databaseService.getUsers();
 
-    return comments
-      .filter((c) => c.userId === id)
-      .sort((a, b) => (a.created_at > b.created_at ? -1 : 1));
+    const user = users.find((u) => u.id === id);
+    if (!user) {
+      throw "The provided user doesn't exist";
+    }
+
+    return user.comments.sort((a, b) => (a.created_at > b.created_at ? -1 : 1));
   };
 }
