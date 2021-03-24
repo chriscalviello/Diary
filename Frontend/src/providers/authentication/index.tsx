@@ -51,7 +51,7 @@ export const AuthenticationProvider = ({ children }: Props) => {
       };
       setCurrentUser(user);
       localStorage.setItem("currentUser", JSON.stringify(user));
-      history.replace("/");
+      history.replace("/comments");
     } catch (err) {
       setError(err.message);
     }
@@ -88,7 +88,7 @@ export const AuthenticationProvider = ({ children }: Props) => {
       };
       setCurrentUser(user);
       localStorage.setItem("currentUser", JSON.stringify(user));
-      history.replace("/");
+      history.replace("/comments");
     } catch (err) {
       setError(err.message);
     }
