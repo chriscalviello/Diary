@@ -62,13 +62,8 @@ export class FakeCommentService implements CommentService {
     return comments.find((c: CommentWithUser) => c.id === id);
   };
   getByUser = (id: string) => {
-    const users = this.databaseService.getUsers();
+    const comments = this.databaseService.getComments(id);
 
-    const user = users.find((u) => u.id === id);
-    if (!user) {
-      throw "The provided user doesn't exist";
-    }
-
-    return user.comments.sort((a, b) => (a.created_at > b.created_at ? -1 : 1));
+    return comments.sort((a, b) => (a.created_at > b.created_at ? -1 : 1));
   };
 }

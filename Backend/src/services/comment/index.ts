@@ -10,7 +10,7 @@ interface ICommentService {
   ) => Comment;
   getAll: () => CommentWithUser[];
   getById: (id: string) => CommentWithUser | undefined;
-  getByUser: (userId: string) => Comment[];
+  getByUser: (userId: string) => CommentWithUser[];
 }
 
 export default ICommentService;

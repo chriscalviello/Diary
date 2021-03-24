@@ -7,12 +7,12 @@ import { User } from "../../models/user";
 import DatabaseService from ".";
 
 export class FakeDatabaseService implements DatabaseService {
-  getComments = () => {
+  getComments = (userId?: string) => {
     const users = this.getUsers();
 
-    const comments = users.map((u: User) =>
-      this.fixUserRelation(u, u.comments)
-    );
+    const comments = users
+      .filter((u) => u.id === userId || userId === undefined)
+      .map((u: User) => this.fixUserRelation(u, u.comments));
 
     return comments.flat();
   };

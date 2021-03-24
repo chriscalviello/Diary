@@ -19,8 +19,10 @@ mockedDatabaseService.prototype.getUsers = jest.fn(() => {
   return users;
 });
 
-mockedDatabaseService.prototype.getComments = jest.fn(() => {
-  const comments = users.map((u: User) => fixUserRelation(u, u.comments));
+mockedDatabaseService.prototype.getComments = jest.fn((userId?: string) => {
+  const comments = users
+    .filter((u) => u.id === userId || userId === undefined)
+    .map((u: User) => fixUserRelation(u, u.comments));
 
   return comments.flat();
 });
@@ -81,8 +83,9 @@ describe("FakeCommentService", () => {
     expect(comments[0].id).toBe("5");
   });
 
-  it("should throw an error when getByUser", () => {
-    expect(() => sut.getByUser("invalidUser")).toThrow();
+  it("should get empty array when getByUser", () => {
+    const comments = sut.getByUser("fake");
+    expect(comments).toHaveLength(0);
   });
 
   it("should getById", () => {
