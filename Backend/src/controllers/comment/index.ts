@@ -96,9 +96,7 @@ class CommentController {
     }
     const userId = req.user.id;
 
-    const title = req.body.title;
-    const text = req.body.text;
-    const commentId = req.body.id;
+    const { title, text, commentId } = req.body;
 
     if (!title) {
       return next(new HttpError("A 'title' param is required", 500));

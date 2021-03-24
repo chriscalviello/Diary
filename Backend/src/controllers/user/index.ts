@@ -53,10 +53,7 @@ class UserController {
       return next(new HttpError("You are not authorized", 403));
     }
 
-    const email = req.body.email;
-    const name = req.body.name;
-    const surname = req.body.surname;
-    const role = req.body.role as string;
+    const { email, name, surname, role } = req.body;
 
     if (!email) {
       return next(new HttpError("A 'email' param is required", 500));

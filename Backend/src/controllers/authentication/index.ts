@@ -10,8 +10,7 @@ export class AuthenticationController {
   }
 
   login = async (req: Request, res: Response, next: NextFunction) => {
-    const email = req.body.email;
-    const password = req.body.password;
+    const { email, password } = req.body;
 
     if (!email) {
       return next(new HttpError("A 'email' param is required", 500));
@@ -30,10 +29,7 @@ export class AuthenticationController {
   };
 
   signup = async (req: Request, res: Response, next: NextFunction) => {
-    const email = req.body.email;
-    const password = req.body.password;
-    const name = req.body.name;
-    const surname = req.body.surname;
+    const { email, password, name, surname } = req.body;
 
     if (!email) {
       return next(new HttpError("A 'email' param is required", 500));
