@@ -42,7 +42,7 @@ const Home: React.FC<Props> = ({
     history.push("/addComment");
   };
   const handleDeleteIconClick = (commentId: string) => {
-    const r = confirm("Are tou sure?");
+    const r = confirm("Are you sure?");
     if (r) {
       onDeleteRequest(commentId);
     }

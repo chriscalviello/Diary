@@ -36,7 +36,7 @@ const Home: React.FC<Props> = ({ users, error, loading, onDeleteRequest }) => {
     history.push("/addUser");
   };
   const handleDeleteIconClick = (userId: string) => {
-    const r = confirm("Are tou sure?");
+    const r = confirm("Are you sure?");
     if (r) {
       onDeleteRequest(userId);
     }
