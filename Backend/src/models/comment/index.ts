@@ -20,9 +20,16 @@ export class Comment {
 export class CommentWithUser extends Comment {
   user: User;
 
-  constructor(id: string, title: string, body: string, user: User) {
+  constructor(
+    id: string,
+    title: string,
+    body: string,
+    createdAt: Date,
+    user: User
+  ) {
     super(title, body, user && user.id);
     this.id = id;
+    this.created_at = createdAt;
     this.user = new User(
       user.email,
       user.password,

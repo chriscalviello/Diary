@@ -27,7 +27,7 @@
     // Set the base path
     "baseUrl": ".",
     "resolveJsonModule": true,
-    "typeRoots": ["./src/types"]
+    "typeRoots": ["./src/types", "node_modules/@types"]
   },
   "include": ["src"]
 }

@@ -1,10 +1,13 @@
-import { FakeDatabaseService } from "../database/fake";
+import DatabaseService from "../database";
 import AuthenticationService from ".";
 import { User, LoggedUser } from "../../models/user";
 import { Roles } from "../../authorization";
 
 export class FakeAuthenticationService implements AuthenticationService {
-  private databaseService = new FakeDatabaseService();
+  private databaseService: DatabaseService;
+  constructor(databaseService: DatabaseService) {
+    this.databaseService = databaseService;
+  }
 
   login = (email: string, password: string) => {
     const users = this.databaseService.getUsers();

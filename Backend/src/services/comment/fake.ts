@@ -1,10 +1,13 @@
-import { FakeDatabaseService } from "../../services/database/fake";
+import DatabaseService from "../../services/database";
 import CommentService from ".";
 import { Comment } from "../../models/comment";
 import { User } from "../../models/user";
 
 export class FakeCommentService implements CommentService {
-  private databaseService = new FakeDatabaseService();
+  private databaseService: DatabaseService;
+  constructor(databaseService: DatabaseService) {
+    this.databaseService = databaseService;
+  }
 
   delete = (id: string) => {
     const users = this.databaseService.getUsers();
