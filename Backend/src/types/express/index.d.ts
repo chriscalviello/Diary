@@ -1,5 +1,5 @@
 declare namespace Express {
   interface Request {
-    user: import("../../models/user").User;
+    user: import("../../models/user").User | undefined;
   }
 }

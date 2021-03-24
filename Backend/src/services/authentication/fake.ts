@@ -1,17 +1,15 @@
-const pathToDb = __dirname + "/../../database/index.json";
-
-var fs = require("fs");
-
+import { FakeDatabaseService } from "../database/fake";
 import AuthenticationService from ".";
 import { User, LoggedUser } from "../../models/user";
 import { Roles } from "../../authorization";
 
 export class FakeAuthenticationService implements AuthenticationService {
-  login = (email: string, password: string) => {
-    const data = fs.readFileSync(pathToDb, "utf8");
-    const users = JSON.parse(data);
+  private databaseService = new FakeDatabaseService();
 
-    const user: User = users.find(
+  login = (email: string, password: string) => {
+    const users = this.databaseService.getUsers();
+
+    const user = users.find(
       (u: User) => u.email === email && u.password === password
     );
     if (!user) {
@@ -27,8 +25,7 @@ export class FakeAuthenticationService implements AuthenticationService {
     return result;
   };
   signup = (email: string, password: string, name: string, surname: string) => {
-    const data = fs.readFileSync(pathToDb, "utf8");
-    const users = JSON.parse(data);
+    const users = this.databaseService.getUsers();
 
     if (users.find((u: User) => u.email === email)) {
       throw "The provided email is already in use";
@@ -37,7 +34,7 @@ export class FakeAuthenticationService implements AuthenticationService {
     const newUser = new User(email, password, name, surname, Roles.user);
     users.push({ ...newUser });
 
-    fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
+    this.databaseService.updateData(users);
 
     const result: LoggedUser = {
       token: this.getJwtToken(newUser.id),

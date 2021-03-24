@@ -14,6 +14,10 @@ class CommentController {
   }
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return next(new HttpError("You are not authorized", 403));
+    }
+
     const commentId = req.body.id;
     if (!commentId) {
       return next(new HttpError("A 'id' param is required", 500));
@@ -42,6 +46,10 @@ class CommentController {
   };
 
   getById = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return next(new HttpError("You are not authorized", 403));
+    }
+
     const commentId = req.query.id as string;
 
     if (!commentId) {
@@ -64,6 +72,10 @@ class CommentController {
   };
 
   get = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return next(new HttpError("You are not authorized", 403));
+    }
+
     try {
       if (req.user.role === Roles.admin) {
         const comments = this.commentService.getAll();
@@ -79,9 +91,13 @@ class CommentController {
   };
 
   save = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return next(new HttpError("You are not authorized", 403));
+    }
+    const userId = req.user.id;
+
     const title = req.body.title;
     const text = req.body.text;
-    const userId = req.user.id;
     const commentId = req.body.id;
 
     if (!title) {

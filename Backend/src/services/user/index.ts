@@ -18,8 +18,8 @@ interface IUserService {
     role: Roles
   ) => User;
   getAll: () => User[];
-  getById: (userId: string) => User;
-  getByToken: (token: string) => User;
+  getById: (userId: string) => User | undefined;
+  getByToken: (token: string) => User | undefined;
 }
 
 export default IUserService;

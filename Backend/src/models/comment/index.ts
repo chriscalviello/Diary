@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { User } from "../user";
 
 export class Comment {
   id: string;
@@ -13,5 +14,22 @@ export class Comment {
     this.body = body;
     this.created_at = new Date();
     this.userId = userId;
+  }
+}
+
+export class CommentWithUser extends Comment {
+  user: User;
+
+  constructor(id: string, title: string, body: string, user: User) {
+    super(title, body, user && user.id);
+    this.id = id;
+    this.user = new User(
+      user.email,
+      user.password,
+      user.name,
+      user.surname,
+      user.role
+    );
+    this.user.id = user.id;
   }
 }

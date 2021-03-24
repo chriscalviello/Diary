@@ -49,6 +49,10 @@ class UserController {
   };
 
   save = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return next(new HttpError("You are not authorized", 403));
+    }
+
     const email = req.body.email;
     const name = req.body.name;
     const surname = req.body.surname;

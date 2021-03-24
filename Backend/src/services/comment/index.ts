@@ -1,4 +1,4 @@
-import { Comment } from "../../models/comment";
+import { Comment, CommentWithUser } from "../../models/comment";
 
 interface ICommentService {
   delete: (id: string) => void;
@@ -8,7 +8,7 @@ interface ICommentService {
     text: string,
     id: string | null
   ) => Comment;
-  getAll: () => Comment[];
+  getAll: () => CommentWithUser[];
   getById: (id: string) => Comment | undefined;
   getByUser: (userId: string) => Comment[];
 }

@@ -1,12 +1,11 @@
-const pathToDb = __dirname + "/../../database/index.json";
-
-var fs = require("fs");
-
+import { FakeDatabaseService } from "../../services/database/fake";
 import UserService from ".";
 import { User } from "../../models/user";
 import { Roles } from "../../authorization";
 
 export class FakeUserService implements UserService {
+  private databaseService = new FakeDatabaseService();
+
   delete = (id: string) => {
     const users = this.getAll();
 
@@ -16,7 +15,7 @@ export class FakeUserService implements UserService {
     }
     users.splice(userIndex, 1);
 
-    fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
+    this.databaseService.updateData(users);
   };
   create = (
     email: string,
@@ -25,13 +24,12 @@ export class FakeUserService implements UserService {
     surname: string,
     role: Roles
   ) => {
-    const data = fs.readFileSync(pathToDb, "utf8");
-    const users = JSON.parse(data);
+    const users = this.getAll();
 
     const newUser = new User(email, password, name, surname, role);
     users.push({ ...newUser });
 
-    fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
+    this.databaseService.updateData(users);
 
     return newUser;
   };
@@ -42,8 +40,7 @@ export class FakeUserService implements UserService {
     id: string,
     role: Roles
   ) => {
-    const data = fs.readFileSync(pathToDb, "utf8");
-    const users = JSON.parse(data);
+    const users = this.getAll();
 
     const user = users.find((u: User) => u.id === id);
     if (!user) {
@@ -54,15 +51,12 @@ export class FakeUserService implements UserService {
     user.surname = surname;
     user.role = role;
 
-    fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
+    this.databaseService.updateData(users);
 
     return user;
   };
   getAll = () => {
-    const data = fs.readFileSync(pathToDb, "utf8");
-    const users = JSON.parse(data);
-
-    return users.map((u: User) => u);
+    return this.databaseService.getUsers();
   };
   getById = (id: string) => {
     const users = this.getAll();

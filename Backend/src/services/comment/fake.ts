@@ -1,30 +1,27 @@
-const pathToDb = __dirname + "/../../database/index.json";
-
-var fs = require("fs");
-
+import { FakeDatabaseService } from "../../services/database/fake";
 import CommentService from ".";
 import { Comment } from "../../models/comment";
 import { User } from "../../models/user";
 
 export class FakeCommentService implements CommentService {
+  private databaseService = new FakeDatabaseService();
+
   delete = (id: string) => {
-    const data = fs.readFileSync(pathToDb, "utf8");
-    const users = JSON.parse(data);
+    const users = this.databaseService.getUsers();
 
     users.map((user: User) => {
       const commentIndex = user.comments.findIndex((c) => c.id === id);
       if (commentIndex !== -1) {
         user.comments.splice(commentIndex, 1);
 
-        fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
+        this.databaseService.updateData(users);
       }
     });
   };
   save = (userId: string, title: string, body: string, id: string | null) => {
-    const data = fs.readFileSync(pathToDb, "utf8");
-    const users = JSON.parse(data);
+    const users = this.databaseService.getUsers();
 
-    const user: User = users.find((u: User) => u.id === userId);
+    const user = users.find((u: User) => u.id === userId);
     if (!user) {
       throw "The provided user doesn't exist";
     }
@@ -37,25 +34,20 @@ export class FakeCommentService implements CommentService {
       comment.body = body;
       comment.title = title;
 
-      fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
+      this.databaseService.updateData(users);
 
       return comment;
     } else {
       const comment = new Comment(title, body, user.id);
       user.comments.push(comment);
 
-      fs.writeFileSync(pathToDb, JSON.stringify(users, null, 4), "utf8");
+      this.databaseService.updateData(users);
 
       return comment;
     }
   };
   getAll = () => {
-    const data = fs.readFileSync(pathToDb, "utf8");
-    const users = JSON.parse(data);
-
-    const comments: Comment[] = users.map((u: User) =>
-      this.fixUserRelation(u, u.comments)
-    );
+    const comments = this.databaseService.getComments();
 
     return comments
       .flat()
@@ -72,10 +64,5 @@ export class FakeCommentService implements CommentService {
     return comments
       .filter((c) => c.userId === id)
       .sort((a, b) => (a.created_at > b.created_at ? -1 : 1));
-  };
-  private fixUserRelation = (user: User, comments: Comment[]) => {
-    return comments.map((c: Comment) => {
-      return { ...c, user };
-    });
   };
 }
