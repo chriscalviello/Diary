@@ -69,9 +69,8 @@ const CommentsContainer: React.FC = ({}) => {
         }),
       });
 
-      const responseData = await response.json();
-
       if (!response.ok) {
+        const responseData = await response.json();
         throw new Error(responseData.message);
       }
 
