@@ -96,7 +96,7 @@ class CommentController {
     }
     const userId = req.user.id;
 
-    const { title, text, commentId } = req.body;
+    const { title, text, id } = req.body;
 
     if (!title) {
       return next(new HttpError("A 'title' param is required", 500));
@@ -107,8 +107,8 @@ class CommentController {
     }
 
     try {
-      if (commentId) {
-        const storedComment = this.commentService.getById(commentId);
+      if (id) {
+        const storedComment = this.commentService.getById(id);
         if (!storedComment) {
           return next(new HttpError("Comment not found", 500));
         }
@@ -122,7 +122,7 @@ class CommentController {
         }
       }
 
-      const comment = this.commentService.save(userId, title, text, commentId);
+      const comment = this.commentService.save(userId, title, text, id);
 
       res.json({ comment });
     } catch (err) {
