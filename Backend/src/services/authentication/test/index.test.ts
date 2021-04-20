@@ -14,7 +14,7 @@ let users: User[] = [
     name: "name",
     surname: "surname",
     comments: [],
-    role: Roles.user,
+    role: Roles.admin,
   },
 ];
 
@@ -33,8 +33,9 @@ describe("FakeAuthentication", () => {
     const loggedUser = sut.login("email", "password");
     expect(loggedUser).toBeDefined();
     expect(loggedUser.id).toBe("id");
-    expect(loggedUser.email).toBe("email");
-    expect(loggedUser.token).toBe("fake-jwt-token|id");
+    expect(loggedUser.accessToken).toBeDefined();
+    expect(loggedUser.refreshToken).toBeDefined();
+    expect(loggedUser.role).toBe(Roles.admin);
   });
 
   it("should throw an erorr when login with invalid credentials", () => {
@@ -57,11 +58,28 @@ describe("FakeAuthentication", () => {
     );
     expect(loggedUser).toBeDefined();
     expect(loggedUser.id).toBeDefined();
-    expect(loggedUser.email).toBe("newEmail2");
-    expect(loggedUser.token).toBe("fake-jwt-token|" + loggedUser.id);
+    expect(loggedUser.accessToken).toBeDefined();
+    expect(loggedUser.refreshToken).toBeDefined();
+    expect(loggedUser.role).toBe(Roles.user);
   });
 
   it("should throw an erorr when signup with existing credentials", () => {
     expect(() => sut.signup("email", "password", "name", "surname")).toThrow();
+  });
+
+  it("should getLoggedUserByToken", () => {
+    const loggedUser = sut.login("email", "password");
+
+    const user = sut.getLoggedUserByToken(loggedUser.accessToken as string);
+    expect(user).toBeDefined();
+    expect(user && user.id).toBe(loggedUser.id);
+  });
+
+  it("should not getLoggedUserByToken", () => {
+    expect(() =>
+      sut.getLoggedUserByToken(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+      )
+    ).toThrow();
   });
 });

@@ -75,17 +75,6 @@ describe("FakeUserService", () => {
     ];
   });
 
-  it("should getByToken", () => {
-    const user = sut.getByToken("blablabla|1");
-    expect(user).toBeDefined();
-    expect(user && user.email).toBe("emailadmin");
-  });
-
-  it("should not getByToken", () => {
-    const user = sut.getByToken("blablabla|fake");
-    expect(user).toBeUndefined();
-  });
-
   it("should getById", () => {
     const user = sut.getById("2");
     expect(user).toBeDefined();
