@@ -102,13 +102,13 @@ const Container = styled.div`
 
 const StyledTopbar = styled(Topbar)`
   display: flex;
-  flex: 0;
+  flex: 0 0 auto;
   height: 10vh;
 `;
 
 const Content = styled.div`
   display: flex;
-  flex: 0;
+  flex: 1;
   height: 90vh;
 `;
 
