@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuthentication } from "../../providers/authentication";
 import Home, { CommentProps } from ".";
-import { BASE_API_URL } from "../../constants";
+import API from "../../api";
 
 const CommentsContainer: React.FC = ({}) => {
   const [error, setError] = useState("");
@@ -10,43 +10,40 @@ const CommentsContainer: React.FC = ({}) => {
   const [comments, setComments] = useState<CommentProps[]>([]);
 
   const fetchComments = async () => {
-    try {
-      setLoading(true);
-      setError("");
+    setLoading(true);
+    setError("");
 
-      const response = await fetch(BASE_API_URL + "/comments/get", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + currentUser?.token,
-        },
+    API.get("/comments/get", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + currentUser?.token,
+      },
+    })
+      .then((res) => {
+        const responseData = res.data;
+        setComments(
+          responseData.comments.map((c: any) => {
+            const comment: CommentProps = {
+              id: c.id,
+              body: c.body,
+              title: c.title,
+              date: new Date(c.created_at).toLocaleString(),
+              author: {
+                id: c.user.id,
+                name: c.user.name,
+                surname: c.user.surname,
+              },
+            };
+            return comment;
+          })
+        );
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        throw new Error(responseData.message);
-      }
-
-      setComments(
-        responseData.comments.map((c: any) => {
-          const comment: CommentProps = {
-            id: c.id,
-            body: c.body,
-            title: c.title,
-            date: new Date(c.created_at).toLocaleString(),
-            author: {
-              id: c.user.id,
-              name: c.user.name,
-              surname: c.user.surname,
-            },
-          };
-          return comment;
-        })
-      );
-    } catch (err) {
-      setError(err.message);
-    }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -54,31 +51,28 @@ const CommentsContainer: React.FC = ({}) => {
   }, []);
 
   const deleteComment = async (id: string) => {
-    try {
-      setLoading(true);
-      setError("");
+    setLoading(true);
+    setError("");
 
-      const response = await fetch(BASE_API_URL + "/comments/delete", {
-        method: "POST",
+    API.post(
+      "/comments/delete",
+      { id },
+      {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + currentUser?.token,
         },
-        body: JSON.stringify({
-          id,
-        }),
-      });
-
-      if (!response.ok) {
-        const responseData = await response.json();
-        throw new Error(responseData.message);
       }
-
-      fetchComments();
-    } catch (err) {
-      setLoading(false);
-      setError(err.message);
-    }
+    )
+      .then(() => {
+        fetchComments();
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (

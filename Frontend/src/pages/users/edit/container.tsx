@@ -3,7 +3,8 @@ import { useHistory } from "react-router-dom";
 import { useAuthentication } from "../../../providers/authentication";
 import { useParams } from "react-router-dom";
 import Edit, { User } from ".";
-import { BASE_API_URL } from "../../../constants";
+import API from "../../../api";
+import axios from "axios";
 
 interface ParamTypes {
   id: string;
@@ -28,61 +29,54 @@ const EditUserContainer: React.FC = ({}) => {
     if (!id) {
       return;
     }
-    try {
-      setLoading(true);
-      setError("");
 
-      const [responseUser, responseRoles] = await Promise.all([
-        fetch(BASE_API_URL + "/users/get?id=" + id, {
-          method: "GET",
+    setLoading(true);
+    setError("");
+
+    axios
+      .all([
+        API.get("/users/get?id=" + id, {
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + currentUser?.token,
           },
         }),
-        fetch(BASE_API_URL + "/users/getRoles", {
-          method: "GET",
+        API.get("/users/getRoles", {
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + currentUser?.token,
           },
         }),
-      ]);
-      const responseData = await responseUser.json();
+      ])
+      .then(
+        axios.spread((responseData, responseRoles) => {
+          if (!responseData.data.users || !responseData.data.users.length) {
+            throw new Error("No user found");
+          }
 
-      if (!responseUser.ok) {
-        throw new Error(responseData.message);
-      }
+          const roles = Object.values(responseRoles.data.roles) as string[];
+          if (!responseRoles.data.roles || !roles.length) {
+            throw new Error("No user's roles found");
+          }
 
-      if (!responseData.users || !responseData.users.length) {
-        throw new Error("No user found");
-      }
+          const data: User = {
+            id: responseData.data.users[0].id,
+            email: responseData.data.users[0].email,
+            name: responseData.data.users[0].name,
+            surname: responseData.data.users[0].surname,
+            role: responseData.data.users[0].role,
+          };
 
-      const responseDataRoles = await responseRoles.json();
-
-      if (!responseRoles.ok) {
-        throw new Error(responseData.message);
-      }
-
-      const roles = Object.values(responseDataRoles.roles) as string[];
-      if (!responseDataRoles.roles || !roles.length) {
-        throw new Error("No user's roles found");
-      }
-
-      const data: User = {
-        id: responseData.users[0].id,
-        email: responseData.users[0].email,
-        name: responseData.users[0].name,
-        surname: responseData.users[0].surname,
-        role: responseData.users[0].role,
-      };
-
-      setUser(data);
-      setRoles(roles);
-    } catch (err) {
-      setError(err.message);
-    }
-    setLoading(false);
+          setUser(data);
+          setRoles(roles);
+        })
+      )
+      .catch((err) => {
+        setError(err.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -90,39 +84,40 @@ const EditUserContainer: React.FC = ({}) => {
   }, []);
 
   const saveUser = async (data: User) => {
-    try {
-      setLoading(true);
-      setError("");
+    setLoading(true);
+    setError("");
 
-      const response = await fetch(BASE_API_URL + "/users/save", {
-        method: "POST",
+    API.post(
+      "/users/save",
+      {
+        id: data.id,
+        email: data.email,
+        name: data.name,
+        surname: data.surname,
+        role: data.role,
+      },
+      {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + currentUser?.token,
         },
-        body: JSON.stringify({
-          id: data.id,
-          email: data.email,
-          name: data.name,
-          surname: data.surname,
-          role: data.role,
-        }),
+      }
+    )
+      .then((res) => {
+        const responseData = res.data;
+
+        if (!responseData.user) {
+          throw new Error("Something went wrong");
+        }
+
+        history.push("/users");
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        throw new Error(responseData.message);
-      }
-
-      if (!responseData.user) {
-        throw new Error("Something went wrong");
-      }
-
-      history.push("/users");
-    } catch (err) {
-      setLoading(false);
-      setError(err.message);
-    }
   };
 
   const goToList = () => {

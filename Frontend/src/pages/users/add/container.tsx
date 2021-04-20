@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useAuthentication } from "../../../providers/authentication";
 import Add, { User } from ".";
-import { BASE_API_URL } from "../../../constants";
+import API from "../../../api";
 
 const AddUserContainer: React.FC = ({}) => {
   const history = useHistory();
@@ -18,41 +18,38 @@ const AddUserContainer: React.FC = ({}) => {
   });
   const [roles, setRoles] = useState<string[]>([]);
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      setError("");
+  const fetchData = () => {
+    setLoading(true);
+    setError("");
 
-      const response = await fetch(BASE_API_URL + "/users/getRoles", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + currentUser?.token,
-        },
+    API.get("/users/getRoles", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + currentUser?.token,
+      },
+    })
+      .then((res) => {
+        const responseData = res.data;
+
+        const roles = Object.values(responseData.roles) as string[];
+        if (!responseData.roles || !roles.length) {
+          throw new Error("No user's roles found");
+        }
+
+        setRoles(roles);
+        setUser((old) => {
+          return {
+            ...old,
+            role: roles[0],
+          };
+        });
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        throw new Error(responseData.message);
-      }
-
-      const roles = Object.values(responseData.roles) as string[];
-      if (!responseData.roles || !roles.length) {
-        throw new Error("No user's roles found");
-      }
-
-      setRoles(roles);
-      setUser((old) => {
-        return {
-          ...old,
-          role: roles[0],
-        };
-      });
-    } catch (err) {
-      setError(err.message);
-    }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -60,39 +57,40 @@ const AddUserContainer: React.FC = ({}) => {
   }, []);
 
   const saveUser = async (data: User) => {
-    try {
-      setLoading(true);
-      setError("");
+    setLoading(true);
+    setError("");
 
-      const response = await fetch(BASE_API_URL + "/users/save", {
-        method: "POST",
+    API.post(
+      "/users/save",
+      {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        surname: data.surname,
+        role: data.role,
+      },
+      {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + currentUser?.token,
         },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-          name: data.name,
-          surname: data.surname,
-          role: data.role,
-        }),
+      }
+    )
+      .then((res) => {
+        const responseData = res.data;
+
+        if (!responseData.user) {
+          throw new Error("Something went wrong");
+        }
+
+        history.push("/users");
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        throw new Error(responseData.message);
-      }
-
-      if (!responseData.user) {
-        throw new Error("Something went wrong");
-      }
-
-      history.push("/users");
-    } catch (err) {
-      setLoading(false);
-      setError(err.message);
-    }
   };
 
   const goToList = () => {

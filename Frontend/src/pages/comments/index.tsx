@@ -63,6 +63,7 @@ const Home: React.FC<Props> = ({
             color="primary"
             startIcon={<AddIcon />}
             onClick={() => handleAddIconClick()}
+            style={{ marginBottom: "1rem" }}
           >
             New Comment
           </Button>

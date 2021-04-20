@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuthentication } from "../../providers/authentication";
 import Home, { UserProps } from ".";
-import { BASE_API_URL } from "../../constants";
+import API from "../../api";
 
 const UsersContainer: React.FC = ({}) => {
   const [error, setError] = useState("");
@@ -10,39 +10,37 @@ const UsersContainer: React.FC = ({}) => {
   const [users, setUsers] = useState<UserProps[]>([]);
 
   const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      setError("");
+    setLoading(true);
+    setError("");
 
-      const response = await fetch(BASE_API_URL + "/users/get", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + currentUser?.token,
-        },
+    API.get("/users/get", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + currentUser?.token,
+      },
+    })
+      .then((res) => {
+        const responseData = res.data;
+
+        setUsers(
+          responseData.users.map((u: any) => {
+            const user: UserProps = {
+              id: u.id,
+              name: u.name,
+              surname: u.surname,
+              email: u.email,
+              role: u.role,
+            };
+            return user;
+          })
+        );
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        throw new Error(responseData.message);
-      }
-
-      setUsers(
-        responseData.users.map((u: any) => {
-          const user: UserProps = {
-            id: u.id,
-            name: u.name,
-            surname: u.surname,
-            email: u.email,
-            role: u.role,
-          };
-          return user;
-        })
-      );
-    } catch (err) {
-      setError(err.message);
-    }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -50,30 +48,28 @@ const UsersContainer: React.FC = ({}) => {
   }, []);
 
   const deleteUser = async (id: string) => {
-    try {
-      setLoading(true);
-      setError("");
+    setLoading(true);
+    setError("");
 
-      const response = await fetch(BASE_API_URL + "/users/delete", {
-        method: "POST",
+    API.post(
+      "/users/delete",
+      { id },
+      {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + currentUser?.token,
         },
-        body: JSON.stringify({
-          id,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Something went wrong");
       }
-
-      fetchUsers();
-    } catch (err) {
-      setLoading(false);
-      setError(err.message);
-    }
+    )
+      .then(() => {
+        fetchUsers();
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (

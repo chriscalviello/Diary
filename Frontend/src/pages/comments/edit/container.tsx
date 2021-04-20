@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useAuthentication } from "../../../providers/authentication";
 import { useParams } from "react-router-dom";
 import Edit, { Comment } from ".";
-import { BASE_API_URL } from "../../../constants";
+import API from "../../../api";
 
 interface ParamTypes {
   id: string;
@@ -25,41 +25,37 @@ const EditCommentContainer: React.FC = ({}) => {
     if (!id) {
       return;
     }
-    try {
-      setLoading(true);
-      setError("");
 
-      const response = await fetch(
-        BASE_API_URL + "/comments/getById?id=" + id,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + currentUser?.token,
-          },
+    setLoading(true);
+    setError("");
+
+    API.get("/comments/getById?id=" + id, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + currentUser?.token,
+      },
+    })
+      .then((res) => {
+        const responseData = res.data;
+
+        if (!responseData.comment) {
+          throw new Error("No comment found");
         }
-      );
-      const responseData = await response.json();
 
-      if (!response.ok) {
-        throw new Error(responseData.message);
-      }
+        const data: Comment = {
+          id: responseData.comment.id,
+          body: responseData.comment.body,
+          title: responseData.comment.title,
+        };
 
-      if (!responseData.comment) {
-        throw new Error("No comment found");
-      }
-
-      const data: Comment = {
-        id: responseData.comment.id,
-        body: responseData.comment.body,
-        title: responseData.comment.title,
-      };
-
-      setComment(data);
-    } catch (err) {
-      setError(err.message);
-    }
-    setLoading(false);
+        setComment(data);
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -67,37 +63,38 @@ const EditCommentContainer: React.FC = ({}) => {
   }, []);
 
   const saveComment = async (data: Comment) => {
-    try {
-      setLoading(true);
-      setError("");
+    setLoading(true);
+    setError("");
 
-      const response = await fetch(BASE_API_URL + "/comments/save", {
-        method: "POST",
+    API.post(
+      "/comments/save",
+      {
+        id: data.id,
+        title: data.title,
+        text: data.body,
+      },
+      {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + currentUser?.token,
         },
-        body: JSON.stringify({
-          id: data.id,
-          title: data.title,
-          text: data.body,
-        }),
+      }
+    )
+      .then((res) => {
+        const responseData = res.data;
+
+        if (!responseData.comment) {
+          throw new Error("Something went wrong");
+        }
+
+        history.push("/comments");
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        throw new Error(responseData.message);
-      }
-
-      if (!responseData.comment) {
-        throw new Error("Something went wrong");
-      }
-
-      history.push("/comments");
-    } catch (err) {
-      setLoading(false);
-      setError(err.message);
-    }
   };
 
   const goToList = () => {

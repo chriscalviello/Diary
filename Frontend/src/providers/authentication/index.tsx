@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useHistory } from "react-router-dom";
-import { BASE_API_URL } from "../../constants";
+import API from "../../api";
 
 type Context = {
   currentUser?: CurrentUser;
@@ -28,34 +28,28 @@ export const AuthenticationProvider = ({ children }: Props) => {
   const history = useHistory();
 
   const login = async (loginUser: LoginUser) => {
-    try {
-      setLoading(true);
-      setError("");
+    setLoading(true);
+    setError("");
 
-      const response = await fetch(BASE_API_URL + "/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...loginUser }),
+    API.post("/auth/login", { ...loginUser })
+      .then((res) => {
+        const responseData = res.data;
+
+        const user: CurrentUser = {
+          id: responseData.user.id,
+          token: responseData.user.accessToken,
+          refreshToken: "CIAO",
+        };
+        setCurrentUser(user);
+        localStorage.setItem("currentUser", JSON.stringify(user));
+        history.replace("/comments");
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        throw new Error(responseData.message);
-      }
-      const user: CurrentUser = {
-        id: responseData.user.id,
-        email: responseData.user.email,
-        token: responseData.user.token,
-      };
-      setCurrentUser(user);
-      localStorage.setItem("currentUser", JSON.stringify(user));
-      history.replace("/comments");
-    } catch (err) {
-      setError(err.message);
-    }
-    setLoading(false);
   };
 
   const logout = () => {
@@ -65,34 +59,36 @@ export const AuthenticationProvider = ({ children }: Props) => {
   };
 
   const signup = async (newUser: SignupUser) => {
-    try {
-      setLoading(true);
-      setError("");
+    setLoading(true);
+    setError("");
 
-      const response = await fetch(BASE_API_URL + "/auth/signup", {
-        method: "POST",
+    API.post(
+      "/auth/signup",
+      { ...newUser },
+      {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...newUser }),
-      });
-      const responseData = await response.json();
-      if (!response.ok) {
-        throw new Error(responseData.message);
       }
+    )
+      .then((res) => {
+        const responseData = res.data;
 
-      const user: CurrentUser = {
-        id: responseData.user.id,
-        email: responseData.user.email,
-        token: responseData.user.token,
-      };
-      setCurrentUser(user);
-      localStorage.setItem("currentUser", JSON.stringify(user));
-      history.replace("/comments");
-    } catch (err) {
-      setError(err.message);
-    }
-    setLoading(false);
+        const user: CurrentUser = {
+          id: responseData.user.id,
+          token: responseData.user.accessToken,
+          refreshToken: responseData.user.refreshToken,
+        };
+        setCurrentUser(user);
+        localStorage.setItem("currentUser", JSON.stringify(user));
+        history.replace("/comments");
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const context: Context = useMemo<Context>(
@@ -120,6 +116,46 @@ export const AuthenticationProvider = ({ children }: Props) => {
     ]
   );
 
+  const createAxiosResponseInterceptor = () => {
+    const interceptor = API.interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      (error) => {
+        const refreshToken = currentUser && currentUser.refreshToken;
+
+        if (
+          !refreshToken ||
+          (error.response && error.response.status !== 401)
+        ) {
+          return Promise.reject(error);
+        }
+
+        API.interceptors.response.eject(interceptor);
+
+        return API.post("auth/token", {
+          token: refreshToken,
+        })
+          .then((response) => {
+            const newCurrentUser = { ...currentUser };
+            newCurrentUser.token = response.data.user.accessToken;
+            localStorage.setItem("currentUser", JSON.stringify(newCurrentUser));
+            error.response.config.headers["Authorization"] =
+              "Bearer " + newCurrentUser.token;
+            return API(error.response.config);
+          })
+          .catch(() => {
+            localStorage.removeItem("currentUser");
+            setCurrentUser(undefined);
+            history.push("/login");
+          })
+          .finally(createAxiosResponseInterceptor);
+      }
+    );
+  };
+
+  createAxiosResponseInterceptor();
+
   return <Context.Provider value={context}>{children}</Context.Provider>;
 };
 
@@ -137,8 +173,8 @@ export const useAuthentication = (): Context => {
 
 type CurrentUser = {
   id: string;
-  email: string;
   token: string;
+  refreshToken: string;
 };
 
 export interface LoginUser {
