@@ -70,9 +70,8 @@ class App {
 
       if (token) {
         try {
-          const userId = this.authenticationService.getUserIdByToken(token);
-          req.user = this.userService.getById(userId);
-        } catch {
+          req.user = this.authenticationService.getLoggedUserByToken(token);
+        } catch (err) {
           const error = new HttpError("Session expired.", 401);
           throw error;
         }
@@ -93,7 +92,7 @@ class App {
     this.app.use("/api/users", new UserRoutes(this.userService).getRouter());
     this.app.use(
       "/api/comments",
-      new CommentRoutes(this.commentService, this.userService).getRouter()
+      new CommentRoutes(this.commentService).getRouter()
     );
 
     this.app.use((req: Request, res: Response, next: NextFunction) => {

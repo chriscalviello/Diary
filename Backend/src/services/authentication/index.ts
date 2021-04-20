@@ -8,7 +8,7 @@ interface IAuthenticationService {
     name: string,
     surname: string
   ) => LoggedUser;
-  getUserIdByToken: (token: string) => string;
+  getLoggedUserByToken: (token: string) => LoggedUser;
   refreshToken: (token: string) => LoggedUser;
   logout: (token: string) => void;
 }

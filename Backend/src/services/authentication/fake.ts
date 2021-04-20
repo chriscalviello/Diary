@@ -43,19 +43,18 @@ export class FakeAuthenticationService implements AuthenticationService {
 
     return this.createTokensAndGetLoggedUser(newUser);
   };
-  getUserIdByToken = (token: string) => {
+  getLoggedUserByToken = (token: string) => {
     const authUser = jwt.verify(token, this.accessTokenSecret) as LoggedUser;
 
-    return authUser.id;
+    return authUser;
   };
   refreshToken = (token: string) => {
-    if (!this.refreshTokens[token]) {
+    const user = jwt.verify(token, this.refreshTokenSecret) as LoggedUser;
+    if (!user || !this.refreshTokens[user.id]) {
       throw "Invalid refresh token";
     }
-
-    const user = jwt.verify(token, this.refreshTokenSecret) as LoggedUser;
     const accessToken = jwt.sign({ ...user }, this.accessTokenSecret, {
-      expiresIn: "10s",
+      expiresIn: "20m",
     });
 
     user.refreshToken = token;
@@ -67,7 +66,7 @@ export class FakeAuthenticationService implements AuthenticationService {
     delete this.refreshTokens[token];
   };
   private createTokensAndGetLoggedUser = (user: User) => {
-    const accessToken = this.getJwtToken(user, this.accessTokenSecret, "10s");
+    const accessToken = this.getJwtToken(user, this.accessTokenSecret, "20m");
     const refreshToken = this.getJwtToken(user, this.refreshTokenSecret);
 
     this.refreshTokens[user.id] = refreshToken;
