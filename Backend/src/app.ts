@@ -69,7 +69,8 @@ class App {
       const token = authHeader && authHeader.split(" ")[1];
 
       if (token) {
-        req.user = this.userService.getByToken(token);
+        const userId = this.authenticationService.getUserIdByToken(token);
+        req.user = this.userService.getById(userId);
       }
 
       next();

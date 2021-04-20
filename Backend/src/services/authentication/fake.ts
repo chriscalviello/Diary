@@ -2,11 +2,14 @@ import DatabaseService from "../database";
 import AuthenticationService from ".";
 import { User, LoggedUser } from "../../models/user";
 import { Roles } from "../../authorization";
+import jwt from "jsonwebtoken";
 
 export class FakeAuthenticationService implements AuthenticationService {
   private databaseService: DatabaseService;
+  private accessTokenSecret: string;
   constructor(databaseService: DatabaseService) {
     this.databaseService = databaseService;
+    this.accessTokenSecret = "accesstokensecret";
   }
 
   login = (email: string, password: string) => {
@@ -19,13 +22,7 @@ export class FakeAuthenticationService implements AuthenticationService {
       throw "Email or password is incorrect";
     }
 
-    const result: LoggedUser = {
-      token: this.getJwtToken(user.id),
-      email: user.email,
-      id: user.id,
-    };
-
-    return result;
+    return new LoggedUser(user, this.getJwtToken(user));
   };
   signup = (email: string, password: string, name: string, surname: string) => {
     const users = this.databaseService.getUsers();
@@ -39,13 +36,13 @@ export class FakeAuthenticationService implements AuthenticationService {
 
     this.databaseService.updateData(users);
 
-    const result: LoggedUser = {
-      token: this.getJwtToken(newUser.id),
-      email: newUser.email,
-      id: newUser.id,
-    };
-
-    return result;
+    return new LoggedUser(newUser, this.getJwtToken(newUser));
   };
-  private getJwtToken = (userId: string) => "fake-jwt-token|" + userId;
+  getUserIdByToken = (token: string) => {
+    const authUser = jwt.verify(token, this.accessTokenSecret) as LoggedUser;
+
+    return authUser.id;
+  };
+  private getJwtToken = (user: User) =>
+    jwt.sign({ ...new LoggedUser(user, "") }, this.accessTokenSecret);
 }

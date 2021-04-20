@@ -1,4 +1,4 @@
-import { User, LoggedUser } from "../../models/user";
+import { LoggedUser } from "../../models/user";
 
 interface IAuthenticationService {
   login: (email: string, password: string) => LoggedUser;
@@ -8,6 +8,7 @@ interface IAuthenticationService {
     name: string,
     surname: string
   ) => LoggedUser;
+  getUserIdByToken: (token: string) => string;
 }
 
 export default IAuthenticationService;

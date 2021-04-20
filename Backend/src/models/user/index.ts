@@ -30,12 +30,12 @@ export class User {
 
 export class LoggedUser {
   id: string;
-  email: string;
+  role: Roles;
   token: string;
 
-  constructor(id: string, email: string, token: string) {
-    this.id = id;
-    this.email = email;
+  constructor(user: User, token: string) {
+    this.id = user.id;
+    this.role = user.role;
     this.token = token;
   }
 }
