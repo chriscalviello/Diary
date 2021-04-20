@@ -59,4 +59,34 @@ export class AuthenticationController {
       return next(new HttpError(err, 500));
     }
   };
+
+  token = async (req: Request, res: Response, next: NextFunction) => {
+    const { token } = req.body;
+
+    if (!token) {
+      return next(new HttpError("A 'token' param is required", 500));
+    }
+
+    try {
+      const user = this.authenticationService.refreshToken(token);
+      res.json({ user });
+    } catch (err) {
+      return next(new HttpError(err, 500));
+    }
+  };
+
+  logout = async (req: Request, res: Response, next: NextFunction) => {
+    const { token } = req.body;
+
+    if (!token) {
+      return next(new HttpError("A 'token' param is required", 500));
+    }
+
+    try {
+      const user = this.authenticationService.logout(token);
+      res.send("Logout successful");
+    } catch (err) {
+      return next(new HttpError(err, 500));
+    }
+  };
 }

@@ -12,6 +12,8 @@ export class AuthenticationRoutes {
 
     this.router.post("/login", controller.login);
     this.router.post("/signup", controller.signup);
+    this.router.post("/token", controller.token);
+    this.router.post("/logout", controller.logout);
   }
 
   getRouter = () => this.router;

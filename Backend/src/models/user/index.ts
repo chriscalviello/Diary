@@ -31,11 +31,14 @@ export class User {
 export class LoggedUser {
   id: string;
   role: Roles;
-  token: string;
+  accessToken: string | undefined;
+  refreshToken: string | undefined;
 
-  constructor(user: User, token: string) {
+  constructor(user: User, accessToken?: string, refreshToken?: string) {
     this.id = user.id;
     this.role = user.role;
-    this.token = token;
+
+    this.accessToken = accessToken;
+    this.refreshToken = refreshToken;
   }
 }

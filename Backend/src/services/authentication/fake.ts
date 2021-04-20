@@ -7,9 +7,14 @@ import jwt from "jsonwebtoken";
 export class FakeAuthenticationService implements AuthenticationService {
   private databaseService: DatabaseService;
   private accessTokenSecret: string;
+  private refreshTokenSecret: string;
+  private refreshTokens: Record<string, string>;
+
   constructor(databaseService: DatabaseService) {
     this.databaseService = databaseService;
     this.accessTokenSecret = "accesstokensecret";
+    this.refreshTokenSecret = "refreshtokensecret";
+    this.refreshTokens = {};
   }
 
   login = (email: string, password: string) => {
@@ -22,7 +27,7 @@ export class FakeAuthenticationService implements AuthenticationService {
       throw "Email or password is incorrect";
     }
 
-    return new LoggedUser(user, this.getJwtToken(user));
+    return this.createTokensAndGetLoggedUser(user);
   };
   signup = (email: string, password: string, name: string, surname: string) => {
     const users = this.databaseService.getUsers();
@@ -36,13 +41,43 @@ export class FakeAuthenticationService implements AuthenticationService {
 
     this.databaseService.updateData(users);
 
-    return new LoggedUser(newUser, this.getJwtToken(newUser));
+    return this.createTokensAndGetLoggedUser(newUser);
   };
   getUserIdByToken = (token: string) => {
     const authUser = jwt.verify(token, this.accessTokenSecret) as LoggedUser;
 
     return authUser.id;
   };
-  private getJwtToken = (user: User) =>
-    jwt.sign({ ...new LoggedUser(user, "") }, this.accessTokenSecret);
+  refreshToken = (token: string) => {
+    if (!this.refreshTokens[token]) {
+      throw "Invalid refresh token";
+    }
+
+    const user = jwt.verify(token, this.refreshTokenSecret) as LoggedUser;
+    const accessToken = jwt.sign({ ...user }, this.accessTokenSecret, {
+      expiresIn: "10s",
+    });
+
+    user.refreshToken = token;
+    user.accessToken = accessToken;
+
+    return user;
+  };
+  logout = (token: string) => {
+    delete this.refreshTokens[token];
+  };
+  private createTokensAndGetLoggedUser = (user: User) => {
+    const accessToken = this.getJwtToken(user, this.accessTokenSecret, "10s");
+    const refreshToken = this.getJwtToken(user, this.refreshTokenSecret);
+
+    this.refreshTokens[user.id] = refreshToken;
+
+    return new LoggedUser(user, accessToken, refreshToken);
+  };
+  private getJwtToken = (user: User, tokenSecret: string, expiresIn?: string) =>
+    jwt.sign(
+      { ...new LoggedUser(user) },
+      tokenSecret,
+      expiresIn ? { expiresIn } : undefined
+    );
 }

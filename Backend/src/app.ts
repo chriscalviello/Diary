@@ -69,8 +69,13 @@ class App {
       const token = authHeader && authHeader.split(" ")[1];
 
       if (token) {
-        const userId = this.authenticationService.getUserIdByToken(token);
-        req.user = this.userService.getById(userId);
+        try {
+          const userId = this.authenticationService.getUserIdByToken(token);
+          req.user = this.userService.getById(userId);
+        } catch {
+          const error = new HttpError("Session expired.", 401);
+          throw error;
+        }
       }
 
       next();

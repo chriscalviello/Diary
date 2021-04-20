@@ -9,6 +9,8 @@ interface IAuthenticationService {
     surname: string
   ) => LoggedUser;
   getUserIdByToken: (token: string) => string;
+  refreshToken: (token: string) => LoggedUser;
+  logout: (token: string) => void;
 }
 
 export default IAuthenticationService;
