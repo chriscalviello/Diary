@@ -1,16 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import HttpError from "../../models/httpError";
 import CommentService from "../../services/comment";
-import UserService from "../../services/user";
 import { Roles } from "../../authorization";
 
 class CommentController {
   private commentService: CommentService;
-  private userService: UserService;
 
-  constructor(commentService: CommentService, userService: UserService) {
+  constructor(commentService: CommentService) {
     this.commentService = commentService;
-    this.userService = userService;
   }
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
@@ -59,8 +56,7 @@ class CommentController {
     try {
       const comment = this.commentService.getById(commentId);
       if (comment && req.user.role === Roles.user) {
-        const userComment = req.user.comments.find((c) => c.id === comment.id);
-        if (!userComment) {
+        if (comment.user.id !== req.user.id) {
           return next(new HttpError("Forbidden", 403));
         }
       }
